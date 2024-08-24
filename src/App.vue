@@ -16,9 +16,10 @@ const counter = computed(() => counterStore.count)
 
 <template>
   <div>
-    <Button @click="increment">Increment</Button>
+    <img alt="Vue logo" src="./assets/logo/logo_complete.svg" width="150px"/>
+    <!-- <Button @click="increment">Increment</Button>
     <Button @click="decrement">Decrement</Button>
-    <p>Counter: {{ counter }}</p>
+    <p>Counter: {{ counter }}</p> -->
     <RouterView />
   </div>
 </template>
