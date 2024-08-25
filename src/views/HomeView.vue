@@ -4,7 +4,7 @@
 
 <template>
   <main>
-    <h1>Welcome to Kurt!</h1>
+    <h1>Welcome to Kurt Dev-teste!</h1>
     <p>Kurt is a Vue 3 application template that uses Vite, Vue Router, Pinia, and PrimeVue.</p>
   </main>
 </template>
