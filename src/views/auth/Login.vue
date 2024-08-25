@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col min-h-screen max-w-full lg:flex-row bg-brand-10">
-    <!-- Left Side - Form -->
     <div class="flex items-center justify-center w-full p-5 h-screen rounded-xl">
       <div>
         <h1 class="mb-6 text-3xl font-semibold text-start text-brand-300">Login</h1>
@@ -37,10 +36,7 @@
         </form>
       </div>
     </div>
-
-    <!-- Right Side - Image or Color Background -->
     <div class="hidden w-full lg:flex bg-cover bg-center bg-no-repeat p-5 relative" :style="{ backgroundImage: `url('path-to-your-image.jpg')` }">
-      <!-- Optional: Add a gradient overlay -->
       <div class="w-full h-full bg-gradient-to-r from-brand-50 to-transparent rounded-xl">
         <img src="../../assets/logo/PROJETOMASTERMAX.png" alt="Logo" class="w-40 absolute top-[0.55rem] left-2 rounded-3xl" />
         <div class="mt-60 ml-10">
@@ -62,7 +58,6 @@ const email = ref('');
 const password = ref('');
 
 const login = () => {
-  // Lógica de login aqui
   console.log(`Email: ${email.value}, Password: ${password.value}`);
 };
 </script>
