@@ -53,12 +53,13 @@ import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Password from 'primevue/password';
+import endpoints from '@/Controllers/Endpoints.controller';
 
 const email = ref('');
 const password = ref('');
 
 const login = () => {
-  console.log(`Email: ${email.value}, Password: ${password.value}`);
+  endpoints.fazerLogin({ email: email.value, senha: password.value })
 };
 </script>
 
