@@ -17,7 +17,8 @@
             <template #end>
                 <div class="p-6 bg-custom-darker">
                     <div class="flex items-center mb-4">
-                        <!-- AVATAR -->
+                        <Avatar v-if="user.avatar" :image="user.avatar" class="mr-3" shape="circle" />
+                        <img v-else src="@/assets/icons/user.svg" alt="Avatar" class="avatar">
                         <div class="flex flex-col">
                             <span class="font-bold text-custom-light">{{ user.nome }}</span>
                             <span class="text-sm text-custom-muted">{{ user.email }}</span>
@@ -40,6 +41,7 @@
 import { ref, computed } from 'vue'
 import Menu from 'primevue/menu'
 import Button from 'primevue/button'
+import Avatar from 'primevue/avatar';
 import { useUserStore } from '@/stores/user.store'
 
 const userStore = useUserStore()
@@ -102,6 +104,11 @@ const logout = () => {
 </script>
 
 <style> 
+.avatar {
+    width: 30px; 
+    height: 30px;
+    margin: 0 10px 0 0 ;
+}
 .p-menu-list{
     height: 100% !important;
 }
