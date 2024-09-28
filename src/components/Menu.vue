@@ -48,14 +48,9 @@ import router from '@/router';
 
 const userStore = useUserStore()
 
-const user = ref({
-    nome: 'João Silva',
-    email: 'joao.silva@example.com',
-    nivel_acesso: 'coordenador' 
-})
+const user = ref(false)
 
 setTimeout(async () => {
-    console.log(await userStore.getUserData())
     user.value = await userStore.getUserData()
 }, 100);
 
