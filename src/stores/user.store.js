@@ -14,10 +14,16 @@ export const useUserStore = defineStore({
     actions: {
         setUser(user) {
             this.user = user;
+            localStorage.setItem('session', JSON.stringify(user));
+        },
+        setAvatar(avatar) {
+            this.user.avatar = avatar;
+            localStorage.setItem('session', JSON.stringify(this.user));
         },
         async logout() {
             this.user = false;
-            storageController.destroyLocal()
+            localStorage.removeItem('token');
+            localStorage.removeItem('session');
             util.setNotification('info', 'Sessão finalizada');
             router.push('/');
         },
@@ -25,7 +31,7 @@ export const useUserStore = defineStore({
             if (this.user) {
                 return this.user
             } else {
-                return storageController.getLocal('session');
+                return localStorage.getItem('session');
             }
         },
     },

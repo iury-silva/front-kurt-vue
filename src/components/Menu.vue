@@ -1,5 +1,5 @@
 <template>
-    <div class="card flex h-screen">
+    <div class="card flex h-screen menu">
         <Menu :model="menuItems" class="w-64 h-full bg-custom-dark flex flex-col justify-between shadow-menu">
             <template #start>
                 <span class="inline-flex items-centerp-2 w-full">
@@ -7,26 +7,29 @@
                 </span>
             </template>
             <template #item="{ item, props }">
-                <a v-ripple
+                <a
                     class="flex items-center p-4 text-custom-light hover:bg-custom-hover transition-colors duration-200 "
-                    v-bind="props.action">
+                    v-bind="props.action"
+                    @click="goTo(item.link)">
                     <i :class="[item.icon, 'mr-3 text-custom-accent']"></i>
                     <span>{{ item.label }}</span>
                 </a>
             </template>
             <template #end>
                 <div class="p-6 bg-custom-darker">
-                    <div class="flex items-center mb-4">
-                        <!-- AVATAR -->
+                    <div class="flex items-center mb-4 perfil cursor-pointer" @click="goTo('Perfil')">
+                        <Avatar v-if="user.avatar" :image="user.avatar" class="mr-3" shape="circle" />
+                        <img v-else src="@/assets/icons/user.svg" alt="Avatar" class="avatar">
                         <div class="flex flex-col">
                             <span class="font-bold text-custom-light">{{ user.nome }}</span>
-                            <span class="text-sm text-custom-muted">{{ user.email }}</span>
+                            <span class="text-xs text-custom-muted">{{ user.email }}</span>
                         </div>
                     </div>
                     <div class="flex flex-col gap-2">
                         <Button v-if="user.nivel_acesso == 'coordenador'" icon="pi pi-user-edit" label="Transferir cargo"
-                            class="p-button-text p-button-sm w-full justify-start text-custom-light"
-                            @click="transferRole" />
+                                class="p-button-text p-button-sm w-full justify-start text-custom-light"
+                                @click="openModalTransfer" />
+                        <TransferirCargoModal v-model:visible="modalVisible" @update:visible="transferModalVisible = $event" />
                         <Button icon="pi pi-sign-out" label="Sair"
                             class="p-button-text p-button-sm w-full justify-start text-custom-light" @click="logout" />
                     </div>
@@ -40,20 +43,16 @@
 import { ref, computed } from 'vue'
 import Menu from 'primevue/menu'
 import Button from 'primevue/button'
+import Avatar from 'primevue/avatar';
 import { useUserStore } from '@/stores/user.store'
+import router from '@/router'; 
+import TransferirCargoModal from '@/components/TransferirCargoModal.vue';
+
+const modalVisible = ref(false);
 
 const userStore = useUserStore()
 
-const user = ref({
-    nome: 'João Silva',
-    email: 'joao.silva@example.com',
-    nivel_acesso: 'coordenador' 
-})
-
-setTimeout(async () => {
-    console.log(await userStore.getUserData())
-    user.value = await userStore.getUserData()
-}, 100);
+const user = computed(() => userStore.user);
 
 const menuItems = computed(() => {
     const items = []
@@ -62,7 +61,8 @@ const menuItems = computed(() => {
         items.push({
             label: 'Minhas Atividades',
             items: [
-                { label: 'Minhas Avaliações', icon: 'pi pi-check-square' },
+                { label: 'Avaliações', icon: 'pi pi-check-square' },
+                { label: 'Minhas bancas', icon: 'pi pi-check-square' },
                 { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' }
             ]
         })
@@ -72,37 +72,53 @@ const menuItems = computed(() => {
         items.push({
             label: 'Gestão',
             items: [
-                { label: 'Cronogramas de entrega', icon: 'pi pi-calendar' },
+                { label: 'Cronogramas ', icon: 'pi pi-calendar' },
+                { label: 'Orientações ', icon: 'pi pi-calendar' },
                 { label: 'Bancas', icon: 'pi pi-users' },
-                { label: 'Orientadores', icon: 'pi pi-user' },
-                { label: 'Cadastro de aluno', icon: 'pi pi-user-plus' },
-                { label: 'Cadastro de professor', icon: 'pi pi-user-plus' }
+                { label: 'Cadastro de aluno', icon: 'pi pi-user-plus', link: 'CadastroAluno' },
+                { label: 'Cadastro de professor', icon: 'pi pi-user-plus', link: 'CadastroProfessor' }
             ]
         })
     }
 
     if (user.value.nivel_acesso === 'aluno') {
         items.push(
-            { label: 'Meu TCC', icon: 'pi pi-file' },
-            { label: 'Prazos e avaliações', icon: 'pi pi-calendar-check' },
-            { label: 'Entregas', icon: 'pi pi-send' }
+            { label: 'Minhas entregas', icon: 'pi pi-file' },
+            { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' },
         )
     }
 
     return items
 })
 
-const transferRole = () => {
-    console.log('Transferindo cargo...')
-}
+const openModalTransfer = () => {
+  console.log('Transferir cargo')
+  modalVisible.value = true;
+};
 
 const logout = () => {
     userStore.logout()
 }
+
+const goTo = (link) => {
+    router.push({ name: link });
+}
 </script>
 
 <style> 
-.p-menu-list{
+.p-menu-list {
+    overflow-y: auto;
+}
+.p-menu {
+    height: -webkit-fill-available !important;
+}
+.avatar {
+    width: 30px; 
+    height: 30px;
+    margin: 0 10px 0 0 ;
+}
+
+.p-menu-list {
     height: 100% !important;
 }
 
@@ -163,5 +179,12 @@ const logout = () => {
 
 :deep(.p-button.p-button-text:hover) {
     background: theme('colors.brand.100');
+}
+.perfil {
+    border-radius: var(--p-menu-item-border-radius);
+    padding: 5px;
+}
+.perfil:hover {
+    background: var(--p-menu-item-focus-background);
 }
 </style>
