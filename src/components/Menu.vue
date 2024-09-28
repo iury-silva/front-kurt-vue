@@ -9,7 +9,8 @@
             <template #item="{ item, props }">
                 <a v-ripple
                     class="flex items-center p-4 text-custom-light hover:bg-custom-hover transition-colors duration-200 "
-                    v-bind="props.action">
+                    v-bind="props.action"
+                    @click="goTo(item.link)">
                     <i :class="[item.icon, 'mr-3 text-custom-accent']"></i>
                     <span>{{ item.label }}</span>
                 </a>
@@ -43,6 +44,7 @@ import Menu from 'primevue/menu'
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar';
 import { useUserStore } from '@/stores/user.store'
+import router from '@/router'; 
 
 const userStore = useUserStore()
 
@@ -78,7 +80,7 @@ const menuItems = computed(() => {
                 { label: 'Bancas', icon: 'pi pi-users' },
                 { label: 'Orientadores', icon: 'pi pi-user' },
                 { label: 'Cadastro de aluno', icon: 'pi pi-user-plus' },
-                { label: 'Cadastro de professor', icon: 'pi pi-user-plus' }
+                { label: 'Cadastro de professor', icon: 'pi pi-user-plus', link: 'CadastroProfessor' }
             ]
         })
     }
@@ -100,6 +102,9 @@ const transferRole = () => {
 
 const logout = () => {
     userStore.logout()
+}
+const goTo = (link) => {
+    router.push({ name: link });
 }
 </script>
 

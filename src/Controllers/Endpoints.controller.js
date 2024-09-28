@@ -21,11 +21,40 @@ const endpoints = {
                 storageController.setLocal('session', response.data.user);
                 util.setNotification('success', 'Login Efetuado com sucesso!');
                 userStore.setUser(response.data.user);
-                router.push('Dashboard');
+                router.push({ name: 'Dashboard' });
             }
         })
         .catch((error) => {
             util.setNotification('error', error.response.data.message)
+        });
+    },
+
+    async cadastraProfessor(dados){
+        if(dados.nome == '' || !dados.nome){
+            util.setNotification('info', 'Complete o nome do professor!')
+            return
+        }
+
+        if(dados.email == '' || !dados.email){
+            util.setNotification('info', 'Complete o email do professor!')
+            return
+        }
+
+        if(dados.departamento == '' || !dados.departamento){
+            util.setNotification('info', 'Complete o departamento do professor!')
+            return
+        }
+
+        return await api.post('professores/create', { nome: dados.nome, email: dados.email, departamento: dados.departamento })
+        .then((response) => {
+            if(response.data){
+                util.setNotification('success', 'Professor cadastrado com sucesso!');
+                return true;
+            }
+        })
+        .catch((error) => {
+            util.setNotification('error', error.response.data.message);
+            return false;
         });
     }
 }
