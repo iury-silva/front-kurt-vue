@@ -6,35 +6,64 @@ import { useUserStore } from '@/stores/user.store'
 import { useGlobalStore } from '@/stores/globais.store'
 
 const endpoints = {
-    fazerLogin(dados) {
-        const userStore = useUserStore()
+    // fazerLogin(dados) {
+    //     const userStore = useUserStore()
 
+    //     if (dados.email == '' || dados.senha == '' || !dados.email || !dados.senha) {
+    //         util.setNotification('info', 'Complete todos os dados para efetuar o Login!')
+    //         return
+    //     }
+    //     useGlobalStore().setLoading(true)
+
+
+    //     // @todo - tava bugando e nao chaamndo a rota do dahsboard dps de logar depois de implementar a tela de perfil
+    //     // sei la eu
+
+    //     api.post('/auth/login', { email: dados.email, senha: dados.senha })
+    //         .then((response) => {
+    //             useGlobalStore().setLoading(false)
+    //             // console.log(response)
+    //             if (response.data) {
+    //                 storageController.setLocal('token', response.data.access_token);
+    //                 storageController.setLocal('session', response.data.user);
+    //                 util.setNotification('success', 'Login Efetuado com sucesso!');
+    //                 userStore.setUser(response.data.user);
+    //                 // console.log(userStore.user);
+    //                 router.push({ name: 'Dashboard' });
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             useGlobalStore().setLoading(false)
+    //             util.setNotification('error', error.response.data.message)
+    //         });
+    // },
+    async fazerLogin(dados) {
+        const userStore = useUserStore()
+        console.log(dados.senha)
         if (dados.email == '' || dados.senha == '' || !dados.email || !dados.senha) {
             util.setNotification('info', 'Complete todos os dados para efetuar o Login!')
             return
         }
-        useGlobalStore().setLoading(true)
+        // useGlobalStore().setLoading(true)
 
-
-        // @todo - tava bugando e nao chaamndo a rota do dahsboard dps de logar depois de implementar a tela de perfil
-        // sei la eu
-
-        api.post('/auth/login', { email: dados.email, senha: dados.senha })
+        return await api.post('/auth/login', { email: dados.email, senha: dados.senha })
             .then((response) => {
-                useGlobalStore().setLoading(false)
-                // console.log(response)
+                // useGlobalStore().setLoading(false)
                 if (response.data) {
-                    storageController.setLocal('token', response.data.access_token);
-                    storageController.setLocal('session', response.data.user);
+                    // storageController.setLocal('token', response.data.access_token);
+                    // storageController.setLocal('session', response.data.user);
+                    localStorage.setItem('token', response.data.access_token);
+                    localStorage.setItem('session', JSON.stringify(response.data.user));
                     util.setNotification('success', 'Login Efetuado com sucesso!');
                     userStore.setUser(response.data.user);
-                    // console.log(userStore.user);
                     router.push({ name: 'Dashboard' });
+                    return true;
                 }
             })
             .catch((error) => {
-                useGlobalStore().setLoading(false)
-                util.setNotification('error', error.response.data.message)
+                // useGlobalStore().setLoading(false)
+                // util.setNotification('error', error.response.data.message[0])
+                return false;
             });
     },
     async recuperarSenha(dados) {
@@ -46,7 +75,7 @@ const endpoints = {
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
     },
@@ -78,7 +107,7 @@ const endpoints = {
             })
             .catch((error) => {
                 useGlobalStore().setLoading(false)
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
     },
@@ -91,7 +120,7 @@ const endpoints = {
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
     },
@@ -126,11 +155,6 @@ const endpoints = {
             })
             .catch((error) => {
                 useGlobalStore().setLoading(false)
-                if (typeof error.response.data.message == 'object') {
-                    util.setNotification('error', error.response.data.message[0]);
-                } else {
-                    util.setNotification('error', error.response.data.message);
-                }
                 return false;
             });
     },
@@ -142,7 +166,7 @@ const endpoints = {
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
     },
@@ -159,7 +183,7 @@ const endpoints = {
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
       },
@@ -177,7 +201,7 @@ const endpoints = {
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
       },
@@ -190,7 +214,7 @@ const endpoints = {
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
         },
@@ -204,13 +228,12 @@ const endpoints = {
                     util.setNotification('success', 'Avatar atualizado com sucesso!');
                     // atualiza o usuário no store
                     const userStore = useUserStore();
-                    console.log(response.data);
-                    userStore.setUser(response.data);
+                    userStore.setAvatar(response.data.avatar);
                     return true;
                 }
             })
             .catch((error) => {
-                util.setNotification('error', error.response.data.message);
+                // util.setNotification('error', error.response.data.message);
                 return false;
             });
     }

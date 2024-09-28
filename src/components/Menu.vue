@@ -7,7 +7,7 @@
                 </span>
             </template>
             <template #item="{ item, props }">
-                <a v-ripple
+                <a
                     class="flex items-center p-4 text-custom-light hover:bg-custom-hover transition-colors duration-200 "
                     v-bind="props.action"
                     @click="goTo(item.link)">
@@ -52,11 +52,7 @@ const modalVisible = ref(false);
 
 const userStore = useUserStore()
 
-const user = ref(false)
-
-setTimeout(async () => {
-    user.value = await userStore.getUserData()
-}, 100);
+const user = computed(() => userStore.user);
 
 const menuItems = computed(() => {
     const items = []

@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user.store'
+import Default from '@/Layouts/Default.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,24 +11,30 @@ const router = createRouter({
       component: () => import('../views/auth/Login.vue')
     },
     {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: () => import('../views/Dashboard.vue')
-    },
-    {
-      path: '/perfil',
-      name: 'Perfil',
-      component: () => import('../views/Perfil.vue')
-    },
-    {
-      path: '/cadastro/professor',
-      name: 'CadastroProfessor',
-      component: () => import('../views/Cadastro/Professor.vue')
-    },
-    {
-      path: '/cadastro/aluno',
-      name: 'CadastroAluno',
-      component: () => import('../views/Cadastro/Aluno.vue')
+      path: '/',
+      component: Default,
+      children: [
+          {
+            path: '/dashboard',
+            name: 'Dashboard',
+            component: () => import('../views/Dashboard.vue')
+          },
+          {
+            path: '/perfil',
+            name: 'Perfil',
+            component: () => import('../views/Perfil.vue')
+          },
+          {
+            path: '/cadastro/professor',
+            name: 'CadastroProfessor',
+            component: () => import('../views/Cadastro/Professor.vue')
+          },
+          {
+            path: '/cadastro/aluno',
+            name: 'CadastroAluno',
+            component: () => import('../views/Cadastro/Aluno.vue')
+          },
+        ]
     },
     // {
     //   path: '/about',
@@ -38,5 +46,24 @@ const router = createRouter({
     // }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+
+  if (to.name !== 'Home' && !token) {
+    next({ name: 'Home' });
+  } 
+  else if (to.name === 'Home' && token) {
+    next({ name: 'Dashboard' });
+  } 
+  else {
+    const userStore = useUserStore();
+    const session = localStorage.getItem('session');
+    if (session) {
+      userStore.setUser(JSON.parse(session));
+    }
+    next();
+  }
+});
 
 export default router

@@ -1,5 +1,4 @@
 <template>
-  <Default>
     <div class="surface-card p-8 shadow-2 border-round">
       <h1 class="title">Cadastro de Aluno</h1>
       <p class="description">
@@ -54,11 +53,9 @@
         </div>
       </form>
     </div>
-  </Default>
 </template>
   
   <script setup>
-import Default from '@/Layouts/Default.vue'
 import { ref } from 'vue'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
