@@ -15,14 +15,20 @@ const endpoints = {
         }
         useGlobalStore().setLoading(true)
 
+
+        // @todo - tava bugando e nao chaamndo a rota do dahsboard dps de logar depois de implementar a tela de perfil
+        // sei la eu
+
         api.post('/auth/login', { email: dados.email, senha: dados.senha })
             .then((response) => {
                 useGlobalStore().setLoading(false)
+                // console.log(response)
                 if (response.data) {
                     storageController.setLocal('token', response.data.access_token);
                     storageController.setLocal('session', response.data.user);
                     util.setNotification('success', 'Login Efetuado com sucesso!');
                     userStore.setUser(response.data.user);
+                    // console.log(userStore.user);
                     router.push({ name: 'Dashboard' });
                 }
             })
@@ -143,7 +149,58 @@ const endpoints = {
                 util.setNotification('error', error.response.data.message);
                 return false;
             });
-      }
+      },
+      async atualizarPerfil(dados) {
+        console.log('atualizarPerfil', dados)
+        return await api.patch('/usuarios/editMyData', dados)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Perfil atualizado com sucesso!');
+                    // atualiza o usuário no store
+                    const userStore = useUserStore();
+                    console.log(response.data)
+                    userStore.setUser(response.data);
+                    return true;
+                }
+            })
+            .catch((error) => {
+                util.setNotification('error', error.response.data.message);
+                return false;
+            });
+      },
+      async mudarSenha(dados) {
+        return await api.post('/usuarios/changepassword', dados)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Senha alterada com sucesso!');
+                    return true;
+                }
+            })
+            .catch((error) => {
+                util.setNotification('error', error.response.data.message);
+                return false;
+            });
+        },
+    async atualizarAvatar(dados) {
+        let body = {
+            base64data: dados.split("base64,")[1]
+        };
+        return await api.post('/usuarios/setAvatar', body)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Avatar atualizado com sucesso!');
+                    // atualiza o usuário no store
+                    const userStore = useUserStore();
+                    console.log(response.data);
+                    userStore.setUser(response.data);
+                    return true;
+                }
+            })
+            .catch((error) => {
+                util.setNotification('error', error.response.data.message);
+                return false;
+            });
+    }
 }
 
 
