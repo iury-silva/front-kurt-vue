@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'CadastroProfessor',
       component: () => import('../views/Cadastro/Professor.vue')
     },
+    {
+      path: '/cadastro/aluno',
+      name: 'CadastroAluno',
+      component: () => import('../views/Cadastro/Aluno.vue')
+    },
     // {
     //   path: '/about',
     //   name: 'about',

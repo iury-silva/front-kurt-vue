@@ -64,7 +64,59 @@ const endpoints = {
             util.setNotification('error', error.response.data.message);
             return false;
         });
-    }
+    },
+
+    async getCursos(){
+        return await api.get('cursos/getAll')
+        .then((response) => {
+            if(response.data){
+                return response.data;
+            }
+        })
+        .catch((error) => {
+            util.setNotification('error', error.response.data.message);
+            return false;
+        });
+    },
+    async cadastraAluno(dados){
+        if(dados.nome == '' || !dados.nome){
+            util.setNotification('info', 'Complete o nome do aluno!')
+            return
+        }
+
+        if(dados.email == '' || !dados.email){
+            util.setNotification('info', 'Complete o email do aluno!')
+            return
+        }
+
+        if(dados.matricula == '' || !dados.matricula){
+            util.setNotification('info', 'Complete o matrícula do aluno!')
+            return
+        }
+        if(dados.idcurso == '' || !dados.idcurso){
+            util.setNotification('info', 'Selecione o curso do aluno!')
+            return
+        }
+        useGlobalStore().setLoading(true)
+
+        return await api.post('alunos/create', dados)
+        .then((response) => {
+            useGlobalStore().setLoading(false)
+            if(response.data){
+                util.setNotification('success', 'Aluno cadastrado com sucesso!');
+                return true;
+            }
+        })
+        .catch((error) => {
+            useGlobalStore().setLoading(false)
+            if(typeof error.response.data.message == 'object'){
+                util.setNotification('error', error.response.data.message[0]);
+            } else {
+                util.setNotification('error', error.response.data.message);
+            }
+            return false;
+        });
+    },
 }
 
 
