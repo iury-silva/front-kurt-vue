@@ -27,8 +27,9 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <Button v-if="user.nivel_acesso == 'coordenador'" icon="pi pi-user-edit" label="Transferir cargo"
-                            class="p-button-text p-button-sm w-full justify-start text-custom-light"
-                            @click="transferRole" />
+                                class="p-button-text p-button-sm w-full justify-start text-custom-light"
+                                @click="openModalTransfer" />
+                        <TransferirCargoModal v-model:visible="modalVisible" @update:visible="transferModalVisible = $event" />
                         <Button icon="pi pi-sign-out" label="Sair"
                             class="p-button-text p-button-sm w-full justify-start text-custom-light" @click="logout" />
                     </div>
@@ -45,6 +46,9 @@ import Button from 'primevue/button'
 import Avatar from 'primevue/avatar';
 import { useUserStore } from '@/stores/user.store'
 import router from '@/router'; 
+import TransferirCargoModal from '@/components/TransferirCargoModal.vue';
+
+const modalVisible = ref(false);
 
 const userStore = useUserStore()
 
@@ -91,9 +95,10 @@ const menuItems = computed(() => {
     return items
 })
 
-const transferRole = () => {
-    console.log('Transferindo cargo...')
-}
+const openModalTransfer = () => {
+  console.log('Transferir cargo')
+  modalVisible.value = true;
+};
 
 const logout = () => {
     userStore.logout()
