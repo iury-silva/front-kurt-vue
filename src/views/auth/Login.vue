@@ -24,18 +24,32 @@
               class="w-full"
               placeholder="Enter your password"
               required
-              toggleMask
             />
           </div>
-          <Button
-            label="Login"
-            type="submit"
-            class="w-full p-button"
-            style="background-color: theme('colors.brand.50'); border-color: theme('colors.brand.50');"
-          />
+          <Button label="Login" type="submit" class="w-full" />
         </form>
+        <div class="mt-4 text-center">
+          <a href="#" @click.prevent="showForgotPasswordModal = true" class="text-sm text-brand-300">Forgot Password?</a>
+        </div>
       </div>
     </div>
+    <Dialog v-model:visible="showForgotPasswordModal" header="Recover Password">
+      <form @submit.prevent="recoverPassword">
+        <div class="form-group">
+          <label for="recover-email" class="block mb-2 text-sm font-medium text-brand-300">Email</label>
+          <InputText
+            id="recover-email"
+            v-model="recoverEmail"
+            type="email"
+            class="w-full p-inputtext"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <Button label="Recover Password" type="submit" class="w-full" />
+        <Button label="Cancel" type="button" class="w-full mt-2" @click="showForgotPasswordModal = false" />
+      </form>
+    </Dialog>
     <div class="hidden w-full lg:flex bg-cover bg-center bg-no-repeat p-5 relative" :style="{ backgroundImage: `url('path-to-your-image.jpg')` }">
       <div class="w-full h-full bg-gradient-to-r from-brand-50 to-transparent rounded-xl">
         <img src="../../assets/logo/PROJETOMASTERMAX.png" alt="Logo" class="w-40 absolute top-[0.55rem] left-2 rounded-3xl" />
@@ -51,15 +65,28 @@
 <script setup>
 import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
 import Password from 'primevue/password';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
 import endpoints from '@/Controllers/Endpoints.controller';
 
 const email = ref('');
 const password = ref('');
+const showForgotPasswordModal = ref(false);
+const recoverEmail = ref('');
 
 const login = () => {
   endpoints.fazerLogin({ email: email.value, senha: password.value })
+};
+
+const recoverPassword = async () => {
+  try {
+    await endpoints.recuperarSenha({ email: recoverEmail.value });
+    console.log('Password recovery email sent successfully');
+    showForgotPasswordModal.value = false;
+  } catch (error) {
+    console.error('Error recovering password:', error);
+  }
 };
 </script>
 
@@ -71,7 +98,6 @@ const login = () => {
     border-color: theme('colors.brand.200');
   }
 }
-
 .p-button {
   &:hover {
     background-color: theme('colors.brand.100');

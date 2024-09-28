@@ -37,6 +37,19 @@ const endpoints = {
                 util.setNotification('error', error.response.data.message)
             });
     },
+    async recuperarSenha(dados) {
+        return await api.post('/auth/recover', dados)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Password recovery email sent successfully!');
+                    return true;
+                }
+            })
+            .catch((error) => {
+                util.setNotification('error', error.response.data.message);
+                return false;
+            });
+    },
 
     async cadastraProfessor(dados) {
         if (dados.nome == '' || !dados.nome) {
