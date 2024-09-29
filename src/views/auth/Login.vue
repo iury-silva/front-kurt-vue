@@ -70,11 +70,16 @@
       </form>
     </Dialog>
     <div class="hidden w-full lg:flex bg-cover bg-center bg-no-repeat relative">
+      <img
+        src="../../assets/img/logo_horizontal.webp"
+        alt=""
+        class="absolute top-8 left-8 w-1/5 z-10"
+      />
       <div class="absolute inset-0 bg-gradient-to-r from-white to-transparent w-1/5"></div>
       <div>
         <div>
           <img
-            src="../../assets/img/login_page.jpeg"
+            src="../../assets/img/login_page_new.webp"
             alt=""
             class="object-cover h-screen max-w-none rounded-xl overflow-hidden bg-contain"
           />
