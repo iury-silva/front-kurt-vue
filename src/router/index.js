@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: () => import('../views/auth/Login.vue')
+      component: () => import('../views/Auth/Login.vue')
     },
     {
       path: '/',
@@ -24,15 +24,10 @@ const router = createRouter({
           name: 'Perfil',
           component: () => import('../views/Perfil.vue')
         },
-        // {
-        //   path: '/bancas',
-        //   name: 'Bancas',
-        //   component: () => import('../views/Bancas/Bancas.vue')
-        // },
         {
           path: '/cronogramas',
           name: 'Cronogramas',
-          component: () => import('../views/Coordenador/Cronogramas.vue')
+          component: () => import('../views/Gestao/Cronogramas/Cronogramas.vue')
         }
       ]
     },
@@ -44,12 +39,12 @@ const router = createRouter({
         {
           path: 'professor',
           name: 'CadastroProfessor',
-          component: () => import('../views/Cadastro/Professor.vue')
+          component: () => import('../views/Gestao/Professores/Professor.vue')
         },
         {
           path: 'aluno',
           name: 'CadastroAluno',
-          component: () => import('../views/Cadastro/Aluno.vue')
+          component: () => import('../views/Gestao/Alunos/Aluno.vue')
         }
       ]
     },
@@ -61,23 +56,15 @@ const router = createRouter({
         {
           path: 'novaBanca',
           name: 'NovaBanca',
-          component: () => import('../views/Bancas/NovaBanca.vue')
+          component: () => import('../views/Gestao/Bancas/NovaBanca.vue')
         },
         {
           path: '',
           name: 'Bancas',
-          component: () => import('../views/Bancas/Bancas.vue')
+          component: () => import('../views/Gestao/Bancas/Bancas.vue')
         }
       ]
     }
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
   ]
 })
 
