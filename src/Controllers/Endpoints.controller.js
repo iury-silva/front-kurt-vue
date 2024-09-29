@@ -168,7 +168,111 @@ const endpoints = {
             .catch(() => {
                 return false;
             });
-    }
+    },
+
+    async getCronogramas(){
+        return await api.get('cronogramas/getAll')
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async createCronograma(dados){
+        if (!dados.descricao || dados.descricao == '') {
+            util.setNotification('info', 'Complete um título para o cronograma!');
+            return 'validacao';
+        }
+        if (!dados.dataInicio || dados.dataInicio == '') {
+            util.setNotification('info', 'Complete uma data de início para o cronograma!');
+            return 'validacao';
+        }
+        if (!dados.dataFim || dados.dataFim == '') {
+            util.setNotification('info', 'Complete uma data de fim para o cronograma!');
+            return 'validacao';
+        }
+        useGlobalStore().setLoading(true);
+
+        return await api.post('cronogramas/create', dados)
+            .then((response) => {
+                useGlobalStore().setLoading(false);
+                if (response.data) {
+                    util.setNotification('success', 'Cronograma cadastrado com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                useGlobalStore().setLoading(false);
+                return false;
+            });
+    },
+
+    async getPrazos(idcronograma){
+        return await api.get('prazos/prazo_cronograma/' + idcronograma)
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async deleteCronograma(idcronograma){
+        return await api.delete('cronogramas/' + idcronograma)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', response.data);
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async deletePrazo(idPrazos){
+        return await api.delete('prazos/' + idPrazos)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Prazo deletado com sucesso!');
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async createPrazo(dados){
+        if (!dados.data_entrega || dados.data_entrega == '') {
+            util.setNotification('info', 'Complete uma data de entrega para o prazo!');
+            return 'validacao';
+        }
+        if (!dados.data_retorno || dados.data_retorno == '') {
+            util.setNotification('info', 'Complete uma data de retorno para o prazo!');
+            return 'validacao';
+        }
+        useGlobalStore().setLoading(true);
+
+        return await api.post('prazos/create', dados)
+            .then((response) => {
+                useGlobalStore().setLoading(false);
+                if (response.data) {
+                    util.setNotification('success', 'Prazo cadastrado com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                useGlobalStore().setLoading(false);
+                return false;
+            });
+    },
 }
 
 export default endpoints;

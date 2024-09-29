@@ -34,6 +34,11 @@ const router = createRouter({
             name: 'CadastroAluno',
             component: () => import('../views/Cadastro/Aluno.vue')
           },
+          {
+            path: '/cronogramas',
+            name: 'Cronogramas',
+            component: () => import('../views/Coordenador/Cronogramas.vue')
+          }
         ]
     },
     // {
