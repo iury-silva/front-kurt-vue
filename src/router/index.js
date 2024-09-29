@@ -29,6 +29,11 @@ const router = createRouter({
         //   name: 'Bancas',
         //   component: () => import('../views/Bancas/Bancas.vue')
         // },
+        {
+          path: '/cronogramas',
+          name: 'Cronogramas',
+          component: () => import('../views/Coordenador/Cronogramas.vue')
+        }
       ]
     },
     {
