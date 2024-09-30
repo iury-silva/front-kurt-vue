@@ -1,5 +1,10 @@
 <template>
   <AppBody>
+    <template #page-description>
+      <p>
+        Nesta página você pode visualizar todas as bancas cadastradas no sistema.
+      </p>
+    </template>
     <template #header-controls>
       <Button
         label="Nova Banca"
@@ -32,8 +37,8 @@
 
       <Column header="Período Cronograma" class="text-left">
         <template #body="slotProps">
-          {{ formatDate(slotProps.data.Cronograma.data_inicio) }} -
-          {{ formatDate(slotProps.data.Cronograma.data_fim) }}
+          {{ format(new Date(slotProps.data.Cronograma.data_inicio), 'dd/MM/yyyy') }} -
+          {{ format(new Date(slotProps.data.Cronograma.data_fim), 'dd/MM/yyyy') }}
         </template>
       </Column>
 
@@ -54,6 +59,7 @@
 <script setup>
 import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import { useBancaStore } from '@/stores/banca.store'
+import { format } from 'date-fns'
 import { onMounted, computed } from 'vue'
 import { useConfirm } from "primevue/useconfirm";
 import DataTable from 'primevue/datatable'
@@ -84,14 +90,6 @@ const confirmDialog = (id_banca) => {
         },
     });
 };
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  })
-}
 
 const getSeverity = (status) => {
   switch (status) {

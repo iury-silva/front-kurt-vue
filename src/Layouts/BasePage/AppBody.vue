@@ -16,7 +16,7 @@
     <div class="text-gray-500 text-sm px-8">
       <slot name="page-description">
         <!-- Caso não seja passado conteúdo para o slot -->
-        Insira aqui uma descrição da página, caso necessário.
+        <!-- Insira aqui uma descrição da página, caso necessário. -->
       </slot>
     </div>
 
@@ -38,7 +38,8 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 // Pega o nome da rota atual e formata
-const currentRoute = route.name ? route.name.toString().replace('-', ' ') : 'Home'
+const currentRoute = route.meta.customName ? route.meta.customName
+  : (route.name ? route.name.toString().replace('-', ' ') : 'Home')
 </script>
 
 <style scoped>

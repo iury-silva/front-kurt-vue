@@ -64,7 +64,49 @@ const router = createRouter({
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
         }
       ]
-    }
+    },
+    {
+      path: '/avaliacoes',
+      name: '',
+      props: true,
+      params: true,
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'Avaliacoes',
+          props: true,
+          params: true,
+          meta: { customName: "Minhas Avaliações" },
+          component: () => import('../views/Atividades/Avalicoes.vue')
+        },
+        {
+          path: 'prazos',
+          name: 'PrazosEAvaliacoes',
+          props: true,
+          params: true,
+          meta: { customName: "Prazos" },
+          component: () => import('../views/Atividades/PrazosEAvaliacoes.vue')
+        }
+      ]
+    },
+    {
+      path: '/orientacoes',
+      name: '',
+      component: Default,
+      children: [
+        {
+          path: 'novaOrientacao',
+          name: 'NovaOrientacao',
+          component: () => import('../views/Gestao/Orientacoes/NovaOrientacao.vue')
+        },
+        {
+          path: '',
+          name: 'Orientacoes',
+          component: () => import('../views/Gestao/Orientacoes/Orientacoes.vue')
+        }
+      ]
+    },
   ]
 })
 

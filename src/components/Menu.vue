@@ -61,7 +61,7 @@ const menuItems = computed(() => {
         items.push({
             label: 'Minhas Atividades',
             items: [
-                { label: 'Avaliações', icon: 'pi pi-check-square' },
+                { label: 'Avaliações', icon: 'pi pi-check-square', link: 'Avaliacoes' },
                 { label: 'Minhas bancas', icon: 'pi pi-check-square' },
                 { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' }
             ]
@@ -73,7 +73,7 @@ const menuItems = computed(() => {
             label: 'Gestão',
             items: [
                 { label: 'Cronogramas ', icon: 'pi pi-calendar', link: 'Cronogramas'  },
-                { label: 'Orientações ', icon: 'pi pi-calendar' },
+                { label: 'Orientações ', icon: 'pi pi-calendar', link: 'Orientacoes' },
                 { label: 'Bancas', icon: 'pi pi-users', link: 'Bancas' },
                 { label: 'Cadastro de aluno', icon: 'pi pi-user-plus', link: 'CadastroAluno' },
                 { label: 'Cadastro de professor', icon: 'pi pi-user-plus', link: 'CadastroProfessor' }
