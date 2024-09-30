@@ -6,13 +6,26 @@
       acompanhando o progresso de cada aluno e facilitando o direcionamento de suas atividades
       acadêmicas.
     </template>
-    <DataTable :value="orientacoes" responsiveLayout="scroll" class="w-full">
+    <DataTable
+      :value="orientacoes"
+      responsiveLayout="scroll"
+      class="w-full"
+      paginator
+      :rows="5"
+      :rowsPerPageOptions="[5, 10, 20, 50]"
+    >
       <Column
         field="orientacao.titulo_trabalho"
         header="Título do Trabalho"
         class="text-left"
       ></Column>
-      <Column field="orientacao.status" header="Status" class="text-left"></Column>
+      <Column field="orientacao.status" header="Status" class="text-left">
+        <template #body="slotProps">
+          <Tag :severity="getSeverity(slotProps.data.orientacao.status)" rounded>
+            {{ slotProps.data.orientacao.status }}
+          </Tag>
+        </template>
+      </Column>
       <Column field="orientacao.Aluno.usuario.nome" header="Aluno" class="text-left"></Column>
       <Column header="Período" class="text-left">
         <template #body="slotProps">
@@ -41,6 +54,7 @@ import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
+import Tag from 'primevue/tag'
 import { useOrientacaoStore } from '@/stores/orientacao.store'
 
 const router = useRouter()
@@ -59,6 +73,17 @@ const formatDate = (dateStr) => {
     month: '2-digit',
     year: 'numeric'
   })
+}
+
+const getSeverity = (status) => {
+  switch (status) {
+    case 'EmAndamento':
+      return 'info'
+    case 'Concluido':
+      return 'success'
+    default:
+      return 'default'
+  }
 }
 
 const irParaPrazosEAvaliacoes = (idOrientacao) => {

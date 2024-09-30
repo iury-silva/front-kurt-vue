@@ -37,8 +37,14 @@
               @click="openAvaliacaoModal(slotProps.data)"
             />
             <div v-else-if="slotProps.data.Avaliacao.length > 0" class="avaliacao-section">
-                <p><strong>Comentário:</strong> {{ slotProps.data.Avaliacao[0].comentario }}</p>
-                <p><strong>Nota:</strong> {{ slotProps.data.Avaliacao[0].nota }}</p>
+              <p><strong>Comentário:</strong> {{ slotProps.data.Avaliacao[0].comentario }}</p>
+              <p><strong>Nota:</strong> {{ slotProps.data.Avaliacao[0].nota }}</p>
+            </div>
+            <div v-else-if="slotProps.data.prazo_tipo === 'EntregaTC' || slotProps.data.prazo_tipo === 'ReelaboracaoTC'" class="noAvaliacao-section">
+                <p><strong>Sem avaliação</strong></p>
+            </div>
+            <div v-else-if="slotProps.data.prazo_tipo === 'EntregaProposta' || slotProps.data.prazo_tipo === 'ReelaboracaoProposta'" class="noAvaliacao-section">
+              <p><strong>Sem entregas para avaliação</strong></p>
             </div>
           </template>
         </Column>
@@ -136,7 +142,6 @@ const getPrazoTipoShortLabel = (prazoTipo) => {
 }
 
 const canCreateEvaluation = (prazo) => {
-  console.log(prazo.Avaliacao.length, prazo.Avaliacao, prazo.Avaliacao.length == 0)
   return (
     (prazo.prazo_tipo === 'EntregaProposta' || prazo.prazo_tipo === 'ReelaboracaoProposta') &&
     prazo.data_envio &&
@@ -148,16 +153,12 @@ const getTipoAvaliacao = (prazo) => {
   switch (prazo) {
     case 'EntregaProposta':
       return 'Proposta'
-      break
     case 'ReelaboracaoProposta':
       return 'ReelaboracaoProposta'
-      break
     case 'EntregaTC':
       return 'TC'
-      break
     case 'ReelaboracaoTC':
       return 'ReelaboracaoTC'
-      break
   }
 }
 
@@ -205,9 +206,9 @@ const submitAvaliacao = async () => {
   color: white;
 }
 
-.p-button:hover {
+/* .p-button:hover {
   background-color: #1e6462;
-}
+} */
 
 .p-button-outlined {
   color: #2a816c;
@@ -240,10 +241,15 @@ const submitAvaliacao = async () => {
   background-color: #e9ecef;
 }
 
-
 .avaliacao-section p strong {
-  margin: 0.5rem 0;           /* Espaçamento entre as linhas */
-  color: #2A816C;                /* Cor do texto */
+  margin: 0.5rem 0; 
+  color: #2a816c;
 }
-
+.noAvaliacao-section p strong {
+  margin: 0.5rem 0;
+  color: #696969;
+  background: #e8e8e8;
+  border-radius: 30px;
+  padding: 8px 12px;
+}
 </style>
