@@ -65,7 +65,6 @@ const router = createRouter({
         }
       ]
     },
-
     {
       path: '/avaliacoes',
       name: '',
@@ -90,7 +89,24 @@ const router = createRouter({
           component: () => import('../views/Atividades/PrazosEAvaliacoes.vue')
         }
       ]
-    }
+    },
+    {
+      path: '/orientacoes',
+      name: '',
+      component: Default,
+      children: [
+        {
+          path: 'novaOrientacao',
+          name: 'NovaOrientacao',
+          component: () => import('../views/Gestao/Orientacoes/NovaOrientacao.vue')
+        },
+        {
+          path: '',
+          name: 'Orientacoes',
+          component: () => import('../views/Gestao/Orientacoes/Orientacoes.vue')
+        }
+      ]
+    },
   ]
 })
 
