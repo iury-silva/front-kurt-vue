@@ -12,10 +12,20 @@
                     {{ formatDate(slotProps.data.data_reuniao) }}
                 </template>
             </Column>
+            <Column header="Documentos" class="text-left">
+                <template #body="slotProps">
+                    <ul v-if="slotProps.data.Documento.length">
+                        <li v-for="documento in slotProps.data.Documento" :key="documento.id_documento">
+                            {{ documento.nome }}
+                            <Button icon="pi pi-download" class="p-button-rounded p-button-sm p-button-text"
+                                @click="downloadFile(documento)" />
+                        </li>
+                    </ul>
+                    <p v-else>Nenhum documento</p>
+                </template>
+            </Column>
             <Column header="" class="text-left">
                 <template #body="slotProps">
-                    <Button icon="pi pi-file" class="p-button-rounded p-button-sm p-button-text"
-                        @click="downloadFile(slotProps.data.id_reuniao)" />
                     <Button icon="pi pi-upload" class="p-button-rounded p-button-sm p-button-text"
                         @click="openUploadModal(slotProps.data.id_reuniao)" />
                 </template>
@@ -28,11 +38,11 @@
                 <input type="file" ref="fileInput" accept="application/pdf" @change="handleFileSelect"
                     style="display: none;" />
                 <div class="upload-area" @click="triggerFileInput">
-                    <p>Drag and drop a PDF file here or click to select</p>
+                    <p>Arraste e solte um arquivo PDF aqui ou clique para selecionar</p>
                 </div>
             </div>
             <div v-if="selectedFile">
-                <p>Selected file: {{ selectedFile.name }}</p>
+                <p>Arquivo selecionado: {{ selectedFile.name }}</p>
                 <Button label="Upload" icon="pi pi-upload" @click="uploadFile" />
             </div>
         </Dialog>
@@ -81,28 +91,30 @@ const formatDate = (dateStr) => {
     });
 };
 
-const downloadFile = async (id_reuniao) => {
-    const reuniao = reunioes.value.find((reuniao) => reuniao.id_reuniao === id_reuniao);
-    if (reuniao && reuniao.Documento.length > 0) {
-        const file = reuniao.Documento[0].arquivo;
-        const byteString = atob(file.split(',')[1]);
-        const mimeString = file.split(',')[0].split(':')[1].split(';')[0];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
+const downloadFile = async (documento) => {
+    try {
+        if (documento && documento.arquivo.length > 0) {
+            const file = documento.arquivo;
+            const byteString = atob(file);
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([ab], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = documento.nome || 'downloaded-file.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } else {
+            alert('Documento não encontrado.');
         }
-        const blob = new Blob([ab], { type: mimeString });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'downloaded-file.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    } else {
-        console.error("No Documento found for the given reuniao");
+    } catch (error) {
+        console.error('Erro ao fazer download do arquivo:', error);
     }
 };
 
@@ -125,7 +137,7 @@ const handleFileSelect = (event) => {
     if (file && file.type === 'application/pdf') {
         selectedFile.value = file;
     } else {
-        alert('Please select a PDF file.');
+        alert('Por favor, selecione um arquivo PDF.');
     }
 };
 
@@ -134,13 +146,13 @@ const handleDrop = (event) => {
     if (file && file.type === 'application/pdf') {
         selectedFile.value = file;
     } else {
-        alert('Please drop a PDF file.');
+        alert('Por favor, arraste um arquivo PDF.');
     }
 };
 
 const uploadFile = async () => {
     if (!selectedFile.value) {
-        alert('No file selected.');
+        alert('Nenhum arquivo selecionado.');
         return;
     }
 
@@ -158,7 +170,7 @@ const uploadFile = async () => {
             console.log('Response:', response);
             closeUploadModal();
         } catch (error) {
-            console.error('Error uploading file:', error);
+            console.error('Erro ao fazer o upload do arquivo:', error);
         }
     };
     reader.readAsDataURL(selectedFile.value);
