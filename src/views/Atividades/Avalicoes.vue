@@ -6,7 +6,11 @@
       acompanhando o progresso de cada aluno e facilitando o direcionamento de suas atividades
       acadêmicas.
     </template>
+    <div v-if="orientacoes.length == 0" class="noOrietations">
+        <span>Você não possui orientações!</span>
+    </div>
     <DataTable
+      v-else
       :value="orientacoes"
       responsiveLayout="scroll"
       class="w-full"
@@ -119,5 +123,11 @@ const irParaPrazosEAvaliacoes = (idOrientacao) => {
 
 :deep(.p-datatable .p-datatable-tbody > tr:hover) {
   background-color: #e9ecef;
+}
+.noOrietations {
+    font-weight: bold;
+    text-align: center;
+    color: #1E6462;
+    font-size: 20px;
 }
 </style>
