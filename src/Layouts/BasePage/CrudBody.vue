@@ -32,10 +32,15 @@
         Insira aqui uma descrição da página, caso necessário.
       </slot>
     </div>
-    
+
     <!-- Conteúdo principal -->
     <main class="flex-1 p-8">
-      <slot></slot>
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <slot>
+          <!-- Conteúdo padrão: tabelas, formulários CRUD, etc. -->
+          <p class="text-lg text-gray-500">Insira aqui seu conteúdo de tabelas ou CRUD.</p>
+        </slot>
+      </div>
     </main>
   </div>
 </template>
@@ -61,6 +66,6 @@ defineExpose({ setBreadcrumbs })
 
 <style scoped>
 .p-breadcrumb {
-    background-color: transparent; /* Ajuste de cor do fundo, se necessário */
+  background-color: transparent; /* Ajuste de cor do fundo, se necessário */
 }
 </style>
