@@ -9,35 +9,44 @@ export default {
     });
   },
 
-  async getBanca(id) {
-    return await api.get(`/bancas/${id}`).then((response) => {
+  async getOrientacoesWithoutBancas() {
+    return await api.get("/orientacoes/orientacoes-without-bancas").then((response) => {
       if (response.data) {
         return response.data;
       }
     });
   },
 
-  async criarBanca(dados) {
-    return await api.post("/bancas", dados).then((response) => {
+  async getProfessores() {
+    return await api.get("/professores/getAll").then((response) => {
       if (response.data) {
         return response.data;
       }
     });
   },
 
-  async atualizarBanca(id, dados) {
-    return await api.put(`/bancas/${id}`, dados).then((response) => {
-      if (response.data) {
-        return response.data;
-      }
-    });
+  async createBanca(dados) {
+    console.log(dados);
+    return await api.post("/bancas/create", dados)
+      .then((response) => {
+        if (response.data) {
+          return true;
+        }
+      })
+      .catch(() => {
+        return false;
+      });
   },
 
-  async deletarBanca(id) {
-    return await api.delete(`/bancas/${id}`).then((response) => {
-      if (response.data) {
-        return response.data;
-      }
-    });
-  },
+  async deleteBanca(id) {
+    return await api.delete(`/bancas/${id}`)
+      .then((response) => {
+        if (response.data) {
+          return true;
+        }
+      })
+      .catch(() => {
+        return false;
+      });
+  }
 };
