@@ -218,13 +218,13 @@
         </StepPanels>
       </Stepper>
     </div>
-    <ConfirmDialog group="headless" :draggable="false" class="w-[30rem]">
+    <ConfirmDialog group="headless" :draggable="false" class="min-w-[30rem]">
       <template #container="{ message, acceptCallback, rejectCallback }">
         <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
           <div
-            class="rounded-full bg-brand-100 text-white inline-flex justify-center items-center h-24 w-24 -mt-20"
+            class="rounded-full bg-brand-100 text-white inline-flex justify-center items-center h-24 w-24 -mt-20 border-4 border-white"
           >
-            <i class="pi pi-question text-5xl"></i>
+            <i class="pi pi-question !text-4xl"></i>
           </div>
           <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
           <p class="mb-0">{{ message.message }}</p>

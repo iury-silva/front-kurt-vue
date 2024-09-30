@@ -62,6 +62,18 @@ const router = createRouter({
           path: '',
           name: 'Bancas',
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
+        },
+        {
+          path: 'minhasBancas',
+          name: 'MinhasBancas',
+          component: () => import('../views/Atividades/MinhasBancas/MinhasBancas.vue'),
+        },
+        {
+          path: 'avaliar/:id',
+          name: 'AvaliarEntregas',
+          props: true,
+          params: true,
+          component: () => import('../views/Atividades/MinhasBancas/AvaliarEntregas.vue')
         }
       ]
     },
