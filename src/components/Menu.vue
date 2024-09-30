@@ -61,7 +61,7 @@ const menuItems = computed(() => {
         items.push({
             label: 'Minhas Atividades',
             items: [
-                { label: 'Avaliações', icon: 'pi pi-check-square' },
+                { label: 'Avaliações', icon: 'pi pi-check-square', link: 'Avaliacoes' },
                 { label: 'Minhas bancas', icon: 'pi pi-check-square' },
                 { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' }
             ]

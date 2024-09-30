@@ -229,7 +229,7 @@ const tiposPrazos = ref({
     horarios: false
   },
   ReelaboracaoTC: {
-    nome: 'Reelaboracao deTC',
+    nome: 'Reelaboracao de TC',
     horarios: false
   }
 })

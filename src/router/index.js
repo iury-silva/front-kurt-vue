@@ -64,6 +64,32 @@ const router = createRouter({
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
         }
       ]
+    },
+
+    {
+      path: '/avaliacoes',
+      name: '',
+      props: true,
+      params: true,
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'Avaliacoes',
+          props: true,
+          params: true,
+          meta: { customName: "Minhas Avaliações" },
+          component: () => import('../views/Atividades/Avalicoes.vue')
+        },
+        {
+          path: 'prazos',
+          name: 'PrazosEAvaliacoes',
+          props: true,
+          params: true,
+          meta: { customName: "Prazos" },
+          component: () => import('../views/Atividades/PrazosEAvaliacoes.vue')
+        }
+      ]
     }
   ]
 })
