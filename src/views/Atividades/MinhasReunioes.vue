@@ -32,7 +32,7 @@
             </Column>
         </DataTable>
         <ConfirmDialog :draggable="false" />
-        <Dialog header="Upload PDF" :visible="uploadModalVisible" :modal="true" :closable="true"
+        <Dialog header="Upload PDF" :visible="uploadModalVisible" :modal="true" :closable="true" :draggable="false"
             @hide="closeUploadModal">
             <div class="upload-container" @drop.prevent="handleDrop" @dragover.prevent>
                 <input type="file" ref="fileInput" accept="application/pdf" @change="handleFileSelect"
@@ -60,6 +60,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import router from '@/router';
 import endpoints from '@/Controllers/Endpoints.controller';
 import { useUserStore } from '@/stores/user.store';
+import util from '@/Controllers/Util.controller';
 
 const loading = ref(true);
 const reunioes = ref([]);
@@ -111,7 +112,7 @@ const downloadFile = async (documento) => {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
         } else {
-            alert('Documento não encontrado.');
+            util.setNotification('error', 'Documento não encontrado.');
         }
     } catch (error) {
         console.error('Erro ao fazer download do arquivo:', error);
@@ -137,7 +138,7 @@ const handleFileSelect = (event) => {
     if (file && file.type === 'application/pdf') {
         selectedFile.value = file;
     } else {
-        alert('Por favor, selecione um arquivo PDF.');
+        util.setNotification('error', 'Por favor, selecione um arquivo PDF.');
     }
 };
 
@@ -146,13 +147,13 @@ const handleDrop = (event) => {
     if (file && file.type === 'application/pdf') {
         selectedFile.value = file;
     } else {
-        alert('Por favor, arraste um arquivo PDF.');
+        util.setNotification('error', 'Por favor, arraste um arquivo PDF.');
     }
 };
 
 const uploadFile = async () => {
     if (!selectedFile.value) {
-        alert('Nenhum arquivo selecionado.');
+        util.setNotification('error', 'Nenhum arquivo selecionado.');
         return;
     }
 
