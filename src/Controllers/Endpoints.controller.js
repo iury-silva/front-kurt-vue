@@ -273,6 +273,54 @@ const endpoints = {
                 return false;
             });
     },
+    async getMyReunioes(){
+        return await api.get('reunioes/getReunioes/')
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+    async downloadReuniaoFile(idReuniao){
+        let body = {
+            idreuniao: idReuniao
+        };
+        return await api.post('reunioes/addDocumento', body)
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+    async sendFile(dados) {
+        console.log(dados);
+        let arquivo_formatado = dados.arquivo.split("base64,")[1];
+
+        let body = {
+            idreuniao: dados.idreuniao,
+            // arquivo: dados.arquivo,
+            // remove the base64 header
+            arquivo: arquivo_formatado,
+            nome: dados.nome
+        };
+
+        try {
+          const response = await api.post('reunioes/addDocumento', body);
+            if (response.data) {
+                util.setNotification('success', 'Arquivo enviado com sucesso!');
+                return true;
+            }
+        }
+        catch (error) {
+            return false;
+        }
+      }
 }
 
 export default endpoints;

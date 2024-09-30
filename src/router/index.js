@@ -64,6 +64,18 @@ const router = createRouter({
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
         }
       ]
+    },
+    {
+      path: "/reunioes",
+      name: 'MinhasReunioes',
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'MinhasReunioes',
+          component: () => import('../views/Atividades/MinhasReunioes.vue')
+        }
+      ]
     }
   ]
 })

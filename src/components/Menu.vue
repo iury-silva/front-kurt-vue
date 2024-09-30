@@ -63,7 +63,7 @@ const menuItems = computed(() => {
             items: [
                 { label: 'Avaliações', icon: 'pi pi-check-square' },
                 { label: 'Minhas bancas', icon: 'pi pi-check-square' },
-                { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' }
+                { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times', link: 'MinhasReunioes' }
             ]
         })
     }
@@ -84,7 +84,7 @@ const menuItems = computed(() => {
     if (user.value.nivel_acesso === 'aluno') {
         items.push(
             { label: 'Minhas entregas', icon: 'pi pi-file' },
-            { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' },
+            { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times', link: 'MinhasReunioes' }
         )
     }
 
