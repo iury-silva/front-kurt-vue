@@ -4,7 +4,7 @@ import router from '@/router';
 import util from '@/Controllers/Util.controller';
 
 export const useOrientacaoStore = defineStore({
-    id: "orientacao",
+    id: "orientacoes",
     state: () => ({
         orientacoes: [],
         cronogramas: [],

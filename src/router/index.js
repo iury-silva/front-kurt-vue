@@ -62,6 +62,18 @@ const router = createRouter({
           path: '',
           name: 'Bancas',
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
+        },
+        {
+          path: 'minhasBancas',
+          name: 'MinhasBancas',
+          component: () => import('../views/Atividades/MinhasBancas/MinhasBancas.vue'),
+        },
+        {
+          path: 'avaliar/:id',
+          name: 'AvaliarEntregas',
+          props: true,
+          params: true,
+          component: () => import('../views/Atividades/MinhasBancas/AvaliarEntregas.vue')
         }
       ]
     },
@@ -88,6 +100,23 @@ const router = createRouter({
           meta: { customName: "Prazos" },
           component: () => import('../views/Atividades/PrazosEAvaliacoes.vue')
         }
+      ]
+    },
+    {
+      path: '/entregas',
+      name: '',
+      props: true,
+      params: true,
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'MinhasEntregas',
+          props: true,
+          params: true,
+          meta: { customName: "Minhas Entregas" },
+          component: () => import('../views/Aluno/Entregas.vue')
+        },
       ]
     },
     {
