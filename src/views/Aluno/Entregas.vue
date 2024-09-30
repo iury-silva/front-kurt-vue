@@ -21,7 +21,14 @@
             {{ getPrazoTipoLabel(slotProps.data.prazo_tipo) }}
           </template>
         </Column>
-        <Column field="status" header="Status" class="text-left"></Column>
+        <Column field="status" header="Status" class="text-left">
+          <template #body="slotProps">
+            <Tag :severity="getSeverity(slotProps.data.status)" rounded>
+              {{ formatedStatus(slotProps.data.status) }}
+            </Tag>
+            
+          </template>
+        </Column>
         <Column field="data_envio" header="Data de Envio" class="text-left">
           <template #body="slotProps">
             {{ formatDate(slotProps.data.data_envio) || 'Pendente' }}
@@ -47,68 +54,61 @@
         </Column>
         <Column header="Avaliação" class="text-left">
           <template #body="slotProps">
-            <div v-if="slotProps.data.Avaliacao && slotProps.data.Avaliacao.length > 0">
+            <div
+              v-if="slotProps.data.Avaliacao && slotProps.data.Avaliacao.length > 0"
+              class="entrega_avaliacao"
+            >
               <p><strong>Nota:</strong> {{ slotProps.data.Avaliacao[0].nota }}</p>
               <p><strong>Comentário:</strong> {{ slotProps.data.Avaliacao[0].comentario }}</p>
             </div>
-            <p v-else>Sem avaliação</p>
+            <p v-else class="entrega_semAvaliacao">Sem avaliação</p>
           </template>
         </Column>
       </DataTable>
     </div>
 
     <Dialog
-      v-model:visible="uploadModalVisible"
-      header="Enviar Arquivo"
+      header="Enviar Arquivo PDF"
+      :visible="uploadModalVisible"
       :modal="true"
-      class="p-fluid"
+      :closable="true"
+      @hide="closeUploadModal"
+      v-model:visible="uploadModalVisible"
     >
-      <div class="field">
-        <label for="file">Arquivo</label>
-        <FileUpload
-          id="file"
-          mode="basic"
-          :maxFileSize="1000000"
-          accept="application/pdf"
-          :auto="true"
-          @select="onFileSelect"
-          @upload="onFileUpload"
-          :customUpload="true"
-          chooseLabel="Escolher Arquivo"
-        />
+      <div v-if="selectedFile" class="grid gap-3 justify-items-center arquivo_selecionado_content">
+        <p>Arquivo selecionado:</p>
+
+        <a @click="downloadFileUpload(selectedFile)">{{ selectedFile.name }}</a>
+
+        <Button label="Enviar" icon="pi pi-upload" @click="submitFile" />
       </div>
-      <template #footer>
-        <Button
-          label="Cancelar"
-          icon="pi pi-times"
-          @click="closeUploadModal"
-          class="p-button-text"
+      <div v-else class="upload-container" @drop.prevent="handleDrop" @dragover.prevent>
+        <input
+          type="file"
+          ref="fileInput"
+          accept="application/pdf"
+          @change="handleFileSelect"
+          style="display: none"
         />
-        <Button
-          label="Enviar"
-          icon="pi pi-check"
-          @click="submitFile"
-          :disabled="!selectedFile"
-          autofocus
-        />
-      </template>
+        <div class="upload-area" @click="triggerFileInput">
+          <p>Arraste e solte um arquivo PDF aqui ou clique para selecionar.</p>
+        </div>
+      </div>
     </Dialog>
   </AppBody>
 </template>
   
   <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import FileUpload from 'primevue/fileupload'
 import { useEntregaStore } from '@/stores/entregas.store'
+import util from '@/Controllers/Util.controller'
+import Tag from 'primevue/tag'
 
-const route = useRoute()
-const router = useRouter()
 const entregasStore = useEntregaStore()
 const entregas = ref(null)
 const uploadModalVisible = ref(false)
@@ -150,12 +150,25 @@ const closeUploadModal = () => {
   currentEntrega.value = null
 }
 
-const onFileSelect = (event) => {
-  selectedFile.value = event.files[0]
+const triggerFileInput = () => {
+  document.querySelector('input[type="file"]').click()
 }
 
-const onFileUpload = () => {
-  // This function is not used since we're using customUpload="true"
+const handleFileSelect = (event) => {
+  const file = event.target.files[0]
+  if (file && file.type === 'application/pdf') {
+    selectedFile.value = file
+  } else {
+    util.setNotification('warn', 'Envie um arquivo em PDF')
+  }
+}
+const handleDrop = (event) => {
+  const file = event.dataTransfer.files[0]
+  if (file && file.type === 'application/pdf') {
+    selectedFile.value = file
+  } else {
+    util.setNotification('warn', 'Envie um arquivo em PDF')
+  }
 }
 
 const submitFile = async () => {
@@ -174,7 +187,7 @@ const submitFile = async () => {
 
       entregas.value = await entregasStore.getentregas()
     } catch (error) {
-      console.error('Erro ao enviar arquivo:', error)
+      util.setNotification('error', 'Erro ao baixar arquivo!')
     }
   }
 }
@@ -191,18 +204,57 @@ const fileToBase64 = (file) => {
 const downloadFile = async (entrega) => {
   try {
     if (entrega.arquivo) {
-      const fileName = `${getPrazoTipoLabel(entrega.prazo_tipo)}-${entrega.orientacao.titulo_trabalho}.pdf`
+      const fileName = `${getPrazoTipoLabel(entrega.prazo_tipo)}-${
+        entrega.orientacao.titulo_trabalho
+      }.pdf`
       await entregasStore.downloadFile(entrega.arquivo, fileName)
     } else {
-      console.error('No file available for download')
+      util.setNotification('error', 'Sem arquivo disponível para download!')
     }
   } catch (error) {
-    console.error('Erro ao baixar arquivo:', error)
+    util.setNotification('error', 'Erro ao baixar arquivo!')
+  }
+}
+
+const downloadFileUpload = async (arquivo) => {
+  const base64File = await fileToBase64(arquivo)
+  try {
+    if (base64File) {
+      await entregasStore.downloadFile(base64File, arquivo.name)
+    } else {
+      util.setNotification('error', 'Sem arquivo disponível para download!')
+    }
+  } catch (error) {
+    util.setNotification('error', 'Erro ao baixar arquivo!')
+  }
+}
+
+const formatedStatus = (status) =>{
+  if(status == 'AguardandoAvaliacao'){
+    return 'Aguardando Avaliação';
+  }
+  return status.replace(/([A-Z])/g, ' $1')
+}
+
+const getSeverity = (status) => {
+  switch (status) {
+    case 'Pendente':
+      return 'warn'
+    case 'AguardandoAvaliacao':
+      return 'info'
+    case 'Avaliado':
+      return 'success'
   }
 }
 </script>
-  
-  <style scoped>
+
+<style>
+.p-dialog-header {
+  gap: 20px;
+}
+</style>
+
+<style scoped>
 .p-button {
   background-color: #2a816c;
   border: none;
@@ -261,6 +313,55 @@ const downloadFile = async (entrega) => {
 
 :deep(.p-fileupload-content) {
   background-color: transparent;
+  border: none;
+}
+.entrega_avaliacao p strong {
+  margin: 0.5rem 0;
+  color: #2a816c;
+}
+
+.entrega_semAvaliacao {
+  margin: 0.5rem 0;
+  color: #696969;
+  background: #e8e8e8;
+  border-radius: 30px;
+  padding: 8px;
+  text-align: center;
+}
+
+.upload-container {
+  border: 2px dashed #ccc;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-area {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.upload-area p {
+  margin: 0;
+  color: #666;
+}
+
+.arquivo_selecionado_content a {
+  color: #2a816c;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+.arquivo_selecionado_content a:hover {
+  color: #114658;
+}
+.arquivo_selecionado_content button {
+  border: none;
+  margin: 10px 0 0;
+  padding: 8px 20px;
+}
+.arquivo_selecionado_content button:hover {
   border: none;
 }
 </style>
