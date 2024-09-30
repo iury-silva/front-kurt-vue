@@ -1,7 +1,7 @@
 <template>
   <main class="flex">
     <Menu />
-    <section class="main w-full">
+    <section class="main w-full h-screen overflow-auto">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />

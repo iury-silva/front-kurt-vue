@@ -273,6 +273,72 @@ const endpoints = {
                 return false;
             });
     },
+
+    async getAvaliacoes(){
+        return await api.get('entregas/getStudentSubmissions')
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async createAvaliacao(dados){
+        if (!dados.comentario || dados.comentario == '') {
+            util.setNotification('info', 'Complete o comentário da avaliação!');
+            return 'validacao';
+        }
+        if (!dados.nota || dados.nota == '') {
+            util.setNotification('info', 'Complete a nota da avaliação!');
+            return 'validacao';
+        }
+        useGlobalStore().setLoading(true);
+
+        return await api.post('avaliacoes', dados)
+            .then((response) => {
+                useGlobalStore().setLoading(false);
+                if (response.data) {
+                    util.setNotification('success', 'Avaliação cadastrada com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                useGlobalStore().setLoading(false);
+                return false;
+            });
+    },
+
+    async getEntregas(){
+        return await api.get('entregas/getMySubmissions')
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async submitFile(dados){
+        useGlobalStore().setLoading(true);
+
+        return await api.post('entregas/submit', dados)
+            .then((response) => {
+                useGlobalStore().setLoading(false);
+                if (response.data) {
+                    util.setNotification('success', 'Arquivo enviado com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                useGlobalStore().setLoading(false);
+                return false;
+            });
+    },
     async getMyReunioes(){
         return await api.get('reunioes/getReunioes/')
             .then((response) => {

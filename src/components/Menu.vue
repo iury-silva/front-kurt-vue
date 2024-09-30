@@ -18,7 +18,7 @@
             <template #end>
                 <div class="p-6 bg-custom-darker">
                     <div class="flex items-center mb-4 perfil cursor-pointer" @click="goTo('Perfil')">
-                        <Avatar v-if="user.avatar" :image="user.avatar" class="mr-3" shape="circle" />
+                        <Avatar v-if="user.avatar" :image="user.avatar" class="mr-3 min-w-8" shape="circle" />
                         <img v-else src="@/assets/icons/user.svg" alt="Avatar" class="avatar">
                         <div class="flex flex-col">
                             <span class="font-bold text-custom-light">{{ user.nome }}</span>
@@ -61,7 +61,7 @@ const menuItems = computed(() => {
         items.push({
             label: 'Minhas Atividades',
             items: [
-                { label: 'Avaliações', icon: 'pi pi-check-square' },
+                { label: 'Avaliações', icon: 'pi pi-check-square', link: 'Avaliacoes' },
                 { label: 'Minhas bancas', icon: 'pi pi-check-square' },
                 { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times', link: 'MinhasReunioes' }
             ]
@@ -73,7 +73,7 @@ const menuItems = computed(() => {
             label: 'Gestão',
             items: [
                 { label: 'Cronogramas ', icon: 'pi pi-calendar', link: 'Cronogramas'  },
-                { label: 'Orientações ', icon: 'pi pi-calendar' },
+                { label: 'Orientações ', icon: 'pi pi-calendar', link: 'Orientacoes' },
                 { label: 'Bancas', icon: 'pi pi-users', link: 'Bancas' },
                 { label: 'Cadastro de aluno', icon: 'pi pi-user-plus', link: 'CadastroAluno' },
                 { label: 'Cadastro de professor', icon: 'pi pi-user-plus', link: 'CadastroProfessor' }
@@ -83,7 +83,7 @@ const menuItems = computed(() => {
 
     if (user.value.nivel_acesso === 'aluno') {
         items.push(
-            { label: 'Minhas entregas', icon: 'pi pi-file' },
+            { label: 'Minhas entregas', icon: 'pi pi-file', link: 'MinhasEntregas' },
             { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times', link: 'MinhasReunioes' }
         )
     }
