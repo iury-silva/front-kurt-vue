@@ -72,7 +72,7 @@ const menuItems = computed(() => {
         items.push({
             label: 'Gestão',
             items: [
-                { label: 'Cronogramas ', icon: 'pi pi-calendar' },
+                { label: 'Cronogramas ', icon: 'pi pi-calendar', link: 'Cronogramas'  },
                 { label: 'Orientações ', icon: 'pi pi-calendar' },
                 { label: 'Bancas', icon: 'pi pi-users', link: 'Bancas' },
                 { label: 'Cadastro de aluno', icon: 'pi pi-user-plus', link: 'CadastroAluno' },
