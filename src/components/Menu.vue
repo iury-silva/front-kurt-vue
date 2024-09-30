@@ -18,7 +18,7 @@
             <template #end>
                 <div class="p-6 bg-custom-darker">
                     <div class="flex items-center mb-4 perfil cursor-pointer" @click="goTo('Perfil')">
-                        <Avatar v-if="user.avatar" :image="user.avatar" class="mr-3" shape="circle" />
+                        <Avatar v-if="user.avatar" :image="user.avatar" class="mr-3 min-w-8" shape="circle" />
                         <img v-else src="@/assets/icons/user.svg" alt="Avatar" class="avatar">
                         <div class="flex flex-col">
                             <span class="font-bold text-custom-light">{{ user.nome }}</span>
@@ -83,7 +83,7 @@ const menuItems = computed(() => {
 
     if (user.value.nivel_acesso === 'aluno') {
         items.push(
-            { label: 'Minhas entregas', icon: 'pi pi-file' },
+            { label: 'Minhas entregas', icon: 'pi pi-file', link: 'MinhasEntregas' },
             { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times' },
         )
     }

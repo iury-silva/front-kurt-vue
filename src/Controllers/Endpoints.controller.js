@@ -301,7 +301,7 @@ const endpoints = {
             .then((response) => {
                 useGlobalStore().setLoading(false);
                 if (response.data) {
-                    util.setNotification('success', 'Prazo cadastrado com sucesso!');
+                    util.setNotification('success', 'Avaliação cadastrada com sucesso!');
                     return true;
                 }
             })
@@ -310,6 +310,35 @@ const endpoints = {
                 return false;
             });
     },
+
+    async getEntregas(){
+        return await api.get('entregas/getMySubmissions')
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+
+    async submitFile(dados){
+        useGlobalStore().setLoading(true);
+
+        return await api.post('entregas/submit', dados)
+            .then((response) => {
+                useGlobalStore().setLoading(false);
+                if (response.data) {
+                    util.setNotification('success', 'Arquivo enviado com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                useGlobalStore().setLoading(false);
+                return false;
+            });
+    }
 }
 
 export default endpoints;

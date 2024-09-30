@@ -91,6 +91,23 @@ const router = createRouter({
       ]
     },
     {
+      path: '/entregas',
+      name: '',
+      props: true,
+      params: true,
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'MinhasEntregas',
+          props: true,
+          params: true,
+          meta: { customName: "Minhas Entregas" },
+          component: () => import('../views/Aluno/Entregas.vue')
+        },
+      ]
+    },
+    {
       path: '/orientacoes',
       name: '',
       component: Default,
