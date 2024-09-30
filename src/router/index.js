@@ -90,6 +90,23 @@ const router = createRouter({
           component: () => import('../views/Atividades/PrazosEAvaliacoes.vue')
         }
       ]
+    },
+    {
+      path: '/entregas',
+      name: '',
+      props: true,
+      params: true,
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'MinhasEntregas',
+          props: true,
+          params: true,
+          meta: { customName: "Minhas Entregas" },
+          component: () => import('../views/Aluno/Entregas.vue')
+        },
+      ]
     }
   ]
 })
