@@ -206,9 +206,9 @@ const submitAvaliacao = async () => {
   color: white;
 }
 
-.p-button:hover {
+/* .p-button:hover {
   background-color: #1e6462;
-}
+} */
 
 .p-button-outlined {
   color: #2a816c;
