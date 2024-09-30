@@ -46,6 +46,7 @@
         <template #body="slotProps">
           <Button
             icon="pi pi-trash"
+            v-tooltip.bottom="'Excluir Banca'"
             class="p-button-rounded p-button-sm p-button-text ! !text-red-500 hover:!bg-red-200 hover:!text-red-700"
             @click="confirmDialog(slotProps.data.id_banca)"
           />

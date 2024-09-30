@@ -4,6 +4,7 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice';
 import 'primeicons/primeicons.css'
+import Tooltip from 'primevue/tooltip';
 
 import '@/css/main.css'
 
@@ -13,6 +14,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 
 const app = createApp(App)
 
+app.directive('tooltip', Tooltip);
 app.use(createPinia())
 app.use(router)
 app.use(ConfirmationService);
