@@ -53,7 +53,8 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 // Pega o nome da rota atual e formata
-const currentRoute = route.name ? route.name.toString().replace('-', ' ') : 'Home'
+const currentRoute = route.meta.customName ? route.meta.customName
+  : (route.name ? route.name.toString().replace('-', ' ') : 'Home')
 const items = ref([])
 const home = { icon: 'pi pi-home', label: 'Início' }
 

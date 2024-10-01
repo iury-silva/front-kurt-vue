@@ -8,4 +8,11 @@ export default {
       }
     });
   },
+  async createAvaliacao(avaliacao) {
+    return await api.post("/avaliacoes", avaliacao).then((response) => {
+      if (response.data) {
+        return response.data;
+      }
+    });
+  },
 };
