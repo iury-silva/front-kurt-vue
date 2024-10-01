@@ -21,13 +21,13 @@
                             <Button icon="pi pi-download" class="p-button-rounded p-button-sm p-button-text"
                                 @click="downloadFile(documento)" />
                             <Button icon="pi pi-trash" class="p-button-rounded p-button-sm p-button-text"
-                                @click="deleteFile(documento.id_documento)" />
+                                @click="deleteFile(documento.id_documento)" v-if="user.nivel_acesso == 'professor' || user.nivel_acesso == 'coordenador'" />
                         </li>
                     </ul>
                     <p v-else>Nenhum documento</p>
                 </template>
             </Column>
-            <Column header="" class="text-left">
+            <Column header="" class="text-left" v-if="user.nivel_acesso == 'professor' || user.nivel_acesso == 'coordenador'">
                 <template #body="slotProps">
                     <Button icon="pi pi-upload" class="p-button-rounded p-button-sm p-button-text"
                         @click="openUploadModal(slotProps.data.id_reuniao)" />
