@@ -168,6 +168,12 @@ router.beforeEach((to, from, next) => {
     next({ name: 'Home' })
   } else if (to.name === 'Home' && token) {
     next({ name: 'Dashboard' })
+    const session = localStorage.getItem('session')
+    if(JSON.parse(session).user.nivel_acesso == 'aluno'){
+        next({ name: 'MinhasEntregas' });
+    } else {
+        next({ name: 'Avaliacoes' });
+    }
   } else {
     const userStore = useUserStore()
     const session = localStorage.getItem('session')

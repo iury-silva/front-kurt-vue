@@ -5,20 +5,10 @@ import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import Loading from './components/Loading.vue';
 import { useGlobalStore } from '@/stores/globais.store'
-import { useUserStore } from '@/stores/user.store'; // Importe a sua store
 
 util.setInitial(useToast())
 
 const loading = computed(() => useGlobalStore().getLoading);
-
-const userStore = useUserStore();
-
-const token = localStorage.getItem('token');
-const session = localStorage.getItem('session');
-
-if (token && session) {
-  userStore.setUser(JSON.parse(session));
-}
 </script>
 
 <template>
