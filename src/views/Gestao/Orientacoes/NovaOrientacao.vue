@@ -285,6 +285,7 @@ import Button from 'primevue/button'
 import Calendar from 'primevue/calendar'
 import InputText from 'primevue/inputtext'
 import ConfirmDialog from 'primevue/confirmdialog'
+import confetti from 'canvas-confetti'
 
 const confirm = useConfirm()
 
@@ -344,6 +345,12 @@ const finish = () => {
     titulo_trabalho: title.value,
     data_inicio: firstDate.value,
     data_fim: lastDate.value
+  })
+
+  confetti({
+    particleCount: 200,
+    spread: 130,
+    origin: { y: 0.6 }
   })
 }
 </script>
