@@ -93,7 +93,13 @@ const router = createRouter({
           name: 'MinhasReunioes',
           meta: { customName: "Minhas Reuniões" },
           component: () => import('../views/Atividades/MinhasReunioes.vue')
-        }
+        },
+        {
+          path: 'novaReuniao',
+          name: 'NovaReuniao',
+          meta: { customName: "Nova Reunião" },
+          component: () => import('../views/Atividades/NovaReuniao.vue')
+        },
       ]
     },
     {
