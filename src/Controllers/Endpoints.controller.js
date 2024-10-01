@@ -20,7 +20,11 @@ const endpoints = {
                     localStorage.setItem('session', JSON.stringify(response.data.user));
                     util.setNotification('success', 'Login Efetuado com sucesso!');
                     userStore.setUser(response.data.user);
-                    router.push({ name: 'Dashboard' });
+                    if(response.data.user.nivel_acesso == 'aluno'){
+                        router.push({ name: 'MinhasEntregas' });
+                    } else {
+                        router.push({ name: 'Avaliacoes' });
+                    }
                     return true;
                 }
             })
