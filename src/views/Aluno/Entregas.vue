@@ -26,7 +26,6 @@
             <Tag :severity="getSeverity(slotProps.data.status)" rounded>
               {{ formatedStatus(slotProps.data.status) }}
             </Tag>
-            
           </template>
         </Column>
         <Column field="data_envio" header="Data de Envio" class="text-left">
