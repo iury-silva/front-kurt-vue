@@ -2,6 +2,7 @@
     <AppBody>
         <template #header-controls>
             <Button label="Nova Reunião" icon="pi pi-plus" class="p-button-sm"
+                v-if="user.nivel_acesso == 'professor' || user.nivel_acesso == 'coordenador'"
                 @click="router.push({ name: 'NovaReuniao' })" />
         </template>
         <DataTable :value="reunioes" responsiveLayout="scroll" class="w-full" paginator :rows="5"
@@ -19,6 +20,8 @@
                             {{ documento.nome }}
                             <Button icon="pi pi-download" class="p-button-rounded p-button-sm p-button-text"
                                 @click="downloadFile(documento)" />
+                            <Button icon="pi pi-trash" class="p-button-rounded p-button-sm p-button-text"
+                                @click="deleteFile(documento.id_documento)" />
                         </li>
                     </ul>
                     <p v-else>Nenhum documento</p>
@@ -31,9 +34,9 @@
                 </template>
             </Column>
         </DataTable>
-        <ConfirmDialog :draggable="false" />
-        <Dialog header="Upload PDF" :visible="uploadModalVisible" :modal="true" :closable="true"
-            @hide="closeUploadModal">
+        <ConfirmDialog />
+        <Dialog header="Upload PDF" :visible="uploadModalVisible" :modal="true" :closable="true" :draggable="false"
+            :closeOnEscape="true" @hide="closeUploadModal">
             <div class="upload-container" @drop.prevent="handleDrop" @dragover.prevent>
                 <input type="file" ref="fileInput" accept="application/pdf" @change="handleFileSelect"
                     style="display: none;" />
@@ -50,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import AppBody from '@/Layouts/BasePage/AppBody.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -60,6 +63,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import router from '@/router';
 import endpoints from '@/Controllers/Endpoints.controller';
 import { useUserStore } from '@/stores/user.store';
+import util from '@/Controllers/Util.controller';
 
 const loading = ref(true);
 const reunioes = ref([]);
@@ -67,12 +71,18 @@ const uploadModalVisible = ref(false);
 const selectedFile = ref(null);
 const currentReuniaoId = ref(null);
 
+const userStore = useUserStore()
+
+const user = computed(() => userStore.user)
+
 const fetchReunioes = async () => {
     try {
-        const userStore = useUserStore();
-        const idusuario = userStore.user.idusuario;
-        const response = await endpoints.getMyReunioes(idusuario);
-        reunioes.value = response;
+        const response = await endpoints.getMyReunioes();
+        if (response) {
+            reunioes.value = response;
+        } else {
+            console.error('Failed to fetch reunioes');
+        }
     } catch (error) {
         console.error('Error fetching reunioes:', error);
     } finally {
@@ -111,11 +121,26 @@ const downloadFile = async (documento) => {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
         } else {
-            alert('Documento não encontrado.');
+            util.setNotification('error', 'Documento não encontrado.');
         }
     } catch (error) {
         console.error('Erro ao fazer download do arquivo:', error);
     }
+};
+
+const deleteFile = async (idFile) => {
+    console.log('idFile:', idFile);
+  try {
+    const response = await endpoints.deleteFile(idFile);
+    if (response) {
+      console.log('File deleted successfully');
+      fetchReunioes(); // Refresh the list of reunioes after deletion
+    } else {
+      console.error('Failed to delete file');
+    }
+  } catch (error) {
+    console.error('Error deleting file:', error);
+  }
 };
 
 const openUploadModal = (id_reuniao) => {
@@ -137,7 +162,7 @@ const handleFileSelect = (event) => {
     if (file && file.type === 'application/pdf') {
         selectedFile.value = file;
     } else {
-        alert('Por favor, selecione um arquivo PDF.');
+        util.setNotification('error', 'Por favor, selecione um arquivo PDF.');
     }
 };
 
@@ -146,13 +171,13 @@ const handleDrop = (event) => {
     if (file && file.type === 'application/pdf') {
         selectedFile.value = file;
     } else {
-        alert('Por favor, arraste um arquivo PDF.');
+        util.setNotification('error', 'Por favor, arraste um arquivo PDF.');
     }
 };
 
 const uploadFile = async () => {
     if (!selectedFile.value) {
-        alert('Nenhum arquivo selecionado.');
+        util.setNotification('error', 'Nenhum arquivo selecionado.');
         return;
     }
 
