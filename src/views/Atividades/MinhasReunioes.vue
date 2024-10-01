@@ -14,7 +14,12 @@
       completo dos encontros marcados, permitindo o acompanhamento de datas, horários e detalhes
       importantes para garantir o planejamento e a organização de suas atividades.
     </template>
+
+    <div v-if="reunioes.length == 0" class="noReunions">
+      <span>Você não possui reuniões!</span>
+    </div>
     <DataTable
+      v-else
       :value="reunioes"
       responsiveLayout="scroll"
       class="w-full"
@@ -38,19 +43,19 @@
             >
               <span class="mr-2">{{ documento.nome }}</span>
               <div>
-                  <Button
-                    icon="pi pi-download"
-                    v-tooltip.bottom="'Download'"
-                    class="p-button-rounded p-button-sm p-button-text !text-[#2A816C] hover:!bg-[#e6f7f5] m-1"
-                    @click="downloadFile(documento)"
-                  />
-                  <Button
-                    icon="pi pi-trash"
-                    v-tooltip.bottom="'Excluir'"
-                    class="p-button-rounded p-button-sm p-button-text !text-red-500 hover:!bg-red-200 hover:!text-red-700 m-1"
-                    @click="deleteFile(documento.id_documento)"
-                    v-if="user.nivel_acesso == 'professor' || user.nivel_acesso == 'coordenador'"
-                  />
+                <Button
+                  icon="pi pi-download"
+                  v-tooltip.bottom="'Download'"
+                  class="p-button-rounded p-button-sm p-button-text !text-[#2A816C] hover:!bg-[#e6f7f5] m-1"
+                  @click="downloadFile(documento)"
+                />
+                <Button
+                  icon="pi pi-trash"
+                  v-tooltip.bottom="'Excluir'"
+                  class="p-button-rounded p-button-sm p-button-text !text-red-500 hover:!bg-red-200 hover:!text-red-700 m-1"
+                  @click="deleteFile(documento.id_documento)"
+                  v-if="user.nivel_acesso == 'professor' || user.nivel_acesso == 'coordenador'"
+                />
               </div>
             </li>
           </ul>
@@ -65,7 +70,7 @@
         <template #body="slotProps">
           <Button
             icon="pi pi-upload"
-            v-tooltip.bottom="'Upload'"
+            v-tooltip.bottom="'Importar PDF'"
             class="p-button-rounded p-button-sm p-button-text !text-[#2A816C] hover:!bg-[#e6f7f5]"
             @click="openUploadModal(slotProps.data.id_reuniao)"
           />
@@ -74,7 +79,7 @@
     </DataTable>
     <ConfirmDialog />
     <Dialog
-      header="Upload PDF"
+      header="Importar PDF"
       :visible="uploadModalVisible"
       :modal="true"
       :closable="true"
@@ -104,7 +109,7 @@
       </div>
       <div v-if="selectedFile" class="mt-4">
         <p class="text-[#114658]">Arquivo selecionado: {{ selectedFile.name }}</p>
-        <Button label="Upload" icon="pi pi-upload" @click="uploadFile" class="mt-2" />
+        <Button label="Importar" icon="pi pi-upload" @click="uploadFile" class="mt-2" />
       </div>
     </Dialog>
   </AppBody>
@@ -318,5 +323,11 @@ setTimeout(() => {
 
 .upload-area:hover {
   background-color: #e6f7f5;
+}
+.noReunions {
+  font-weight: bold;
+  text-align: center;
+  color: #1e6462;
+  font-size: 20px;
 }
 </style>
