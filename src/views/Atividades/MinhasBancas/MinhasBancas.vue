@@ -79,3 +79,11 @@ onMounted(() => {
   minhasBancasStore.getMinhasBancasAction()
 })
 </script>
+<style>
+.noBancas {
+    font-weight: bold;
+    text-align: center;
+    color: #1E6462;
+    font-size: 20px;
+}
+</style>
