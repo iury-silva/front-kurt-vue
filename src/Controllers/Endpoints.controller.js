@@ -20,7 +20,11 @@ const endpoints = {
                     localStorage.setItem('session', JSON.stringify(response.data.user));
                     util.setNotification('success', 'Login Efetuado com sucesso!');
                     userStore.setUser(response.data.user);
-                    router.push({ name: 'Dashboard' });
+                    if(response.data.user.nivel_acesso == 'aluno'){
+                        router.push({ name: 'MinhasEntregas' });
+                    } else {
+                        router.push({ name: 'Avaliacoes' });
+                    }
                     return true;
                 }
             })
@@ -338,7 +342,100 @@ const endpoints = {
                 useGlobalStore().setLoading(false);
                 return false;
             });
-    }
+    },
+    async getMyReunioes() {
+        try {
+            const response = await api.get('reunioes/getReunioes');
+            if (response.data) {
+                return response.data;
+            } else {
+                console.error('No data received from getMyReunioes');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error fetching reunioes:', error);
+            return false;
+        }
+    },
+    async downloadReuniaoFile(idReuniao){
+        let body = {
+            idreuniao: idReuniao
+        };
+        return await api.post('reunioes/addDocumento', body)
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+    },
+    async sendFile(dados) {
+        console.log(dados);
+        let arquivo_formatado = dados.arquivo.split("base64,")[1];
+
+        let body = {
+            idreuniao: dados.idreuniao,
+            // arquivo: dados.arquivo,
+            // remove the base64 header
+            arquivo: arquivo_formatado,
+            nome: dados.nome
+        };
+
+        try {
+          const response = await api.post('reunioes/addDocumento', body);
+            if (response.data) {
+                util.setNotification('success', 'Arquivo enviado com sucesso!');
+                return true;
+            }
+        }
+        catch (error) {
+            return false;
+        }
+      },
+      async getMyOrientacoes(){
+        return await api.get('orientacoes/getMyOrientacoes')
+            .then((response) => {
+                if (response.data) {
+                    return response.data;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+      },
+      async createReuniao(dados){
+        // POST // reunioes/addToOrientacao
+        // {
+        //     "idorientacao": "908d43f4-3f6b-4ee8-9e56-cdae7fc7848b",
+        //     "data_reuniao": "{% now 'iso-8601', '' %}",
+        //     "descricao": "teste"
+        // }
+
+        return await api.post('reunioes/addToOrientacao', dados)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Reunião cadastrada com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+      },
+      async deleteFile(dados){
+        return await api.delete('reunioes/removeDocumento/' + dados)
+            .then((response) => {
+                if (response.data) {
+                    util.setNotification('success', 'Arquivo deletado com sucesso!');
+                    return true;
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+      }
 }
 
 export default endpoints;

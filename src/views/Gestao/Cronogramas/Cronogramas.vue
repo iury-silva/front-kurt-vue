@@ -1,18 +1,27 @@
 <template>
-  <div class="card h-full flex flex-col gap-3">
-    <h1 class="page-title">Gerenciamento de Cronogramas</h1>
-
-    <Button label="Criar Cronograma" class="create-btn" @click="openNewCronogramaModal" />
-
+  <AppBody>
+    <template #page-description>
+      <p>
+        Nesta página você pode visualizar e gerenciar todos os cronogramas cadastrados no sistema.
+      </p>
+    </template>
+    <template #header-controls>
+      <Button
+        label="Novo Cronograma"
+        icon="pi pi-plus"
+        class="p-button-sm"
+        @click="openNewCronogramaModal"
+      />
+    </template>
     <DataTable
       :value="cronogramas"
-      :paginator="true"
-      :rows="10"
-      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :rowsPerPageOptions="[5, 10, 20, 50]"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cronogramas"
       responsiveLayout="scroll"
-      class="p-datatable-sm"
+      class="w-full"
+      paginator
+      :rows="10"
+      :rowsPerPageOptions="[5, 10, 20, 50]"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cronogramas"
     >
       <Column field="descricao" header="Descrição" sortable></Column>
       <Column field="data_inicio" header="Data e Hora de Início" sortable>
@@ -29,13 +38,17 @@
         <template #body="slotProps">
           <div class="flex gap-2">
             <Button
-              label="Ver prazos"
-              class="view-deadlines-btn"
+              icon="pi pi-calendar"
+              v-tooltip.bottom="'Ver prazos'"
+              class="p-button-rounded p-button-sm p-button-text !text-[#1E6462] hover:!bg-[#e6f7f5]"
               @click="openPrazosModal(slotProps.data)"
             />
-            <Button class="delete-btn" @click="confirmDeleteCronograma(slotProps.data)">
-              <img src="@/assets/icons/trash.svg" alt="Excluir" class="w-5 h-5" />
-            </Button>
+            <Button
+              icon="pi pi-trash"
+              v-tooltip.bottom="'Excluir Cronograma'"
+              class="p-button-rounded p-button-sm p-button-text !text-red-500 hover:!bg-red-200 hover:!text-red-700"
+              @click="confirmDeleteCronograma(slotProps.data)"
+            />
           </div>
         </template>
       </Column>
@@ -46,37 +59,41 @@
       v-model:visible="novoCronogramaModalVisible"
       header="Criar Novo Cronograma"
       :modal="true"
-      class="dialog-box"
+      :style="{ width: '450px' }"
+      :draggable="false"
+      class="p-fluid"
     >
-      <div class="p-fluid grid gap-2">
-        <div class="field grid gap-2">
-          <label for="descricao">Descrição</label>
-          <InputText id="descricao" v-model="novoCronograma.descricao" required />
+      <div class="grid gap-4">
+        <div class="col-12">
+          <label for="descricao" class="block text-sm font-medium text-[#114658]">Descrição</label>
+          <InputText id="descricao" v-model="novoCronograma.descricao" required class="w-full" />
         </div>
-        <div class="field grid gap-2">
-          <label for="data_inicio">Data e Hora de Início</label>
+        <div class="col-12">
+          <label for="data_inicio" class="block text-sm font-medium text-[#114658]">Data e Hora de Início</label>
           <Calendar
             id="data_inicio"
             v-model="novoCronograma.data_inicio"
             dateFormat="dd/mm/yy"
             :showTime="true"
             :showSeconds="true"
+            class="w-full"
           />
         </div>
-        <div class="field grid gap-2">
-          <label for="data_fim">Data e Hora de Fim</label>
+        <div class="col-12">
+          <label for="data_fim" class="block text-sm font-medium text-[#114658]">Data e Hora de Fim</label>
           <Calendar
             id="data_fim"
             v-model="novoCronograma.data_fim"
             dateFormat="dd/mm/yy"
             :showTime="true"
             :showSeconds="true"
+            class="w-full"
           />
         </div>
       </div>
       <template #footer>
-        <Button label="Cancelar" class="cancel-btn" @click="novoCronogramaModalVisible = false" />
-        <Button label="Salvar" class="save-btn" @click="salvarNovoCronograma" autofocus />
+        <Button label="Cancelar" icon="pi pi-times" @click="novoCronogramaModalVisible = false" class="p-button-text" />
+        <Button label="Salvar" icon="pi pi-check" @click="salvarNovoCronograma" autofocus />
       </template>
     </Dialog>
 
@@ -85,25 +102,31 @@
       v-model:visible="prazosModalVisible"
       header="Gerenciar Prazos"
       :modal="true"
-      class="dialog-box"
+      :style="{ width: '650px' }"
+      :draggable="false"
+      class="p-fluid"
     >
       <div v-if="cronogramaSelecionado">
-        <h2 class="section-title">Prazos para: {{ cronogramaSelecionado.descricao }}</h2>
+        <h2 class="text-xl font-bold text-[#2A816C] mb-4">Prazos para: {{ cronogramaSelecionado.descricao }}</h2>
         <div v-for="(tipo, ind) of tiposPrazos" :key="ind" class="mb-4">
-          <h3 class="subsection-title">{{ tipo.nome }}</h3>
+          <h3 class="text-lg font-semibold text-[#1E6462] mb-2">{{ tipo.nome }}</h3>
           <div v-if="tipo.horarios" class="flex justify-between items-center">
             <div>
               <p>Data e Hora de Entrega: {{ formatDateTime(tipo.horarios.data_entrega) }}</p>
               <p>Data e Hora de Retorno: {{ formatDateTime(tipo.horarios.data_retorno) }}</p>
             </div>
-            <Button class="delete-btn" @click="confirmDeletePrazo(tipo.horarios)">
-              <img src="@/assets/icons/trash.svg" alt="Excluir" class="w-5 h-5" />
-            </Button>
+            <Button
+              icon="pi pi-trash"
+              v-tooltip.bottom="'Excluir Prazo'"
+              class="p-button-rounded p-button-sm p-button-text !text-red-500 hover:!bg-red-200 hover:!text-red-700"
+              @click="confirmDeletePrazo(tipo.horarios)"
+            />
           </div>
           <div v-else>
             <Button
               label="Cadastrar Prazo"
-              class="add-deadline-btn"
+              icon="pi pi-plus"
+              class="p-button-sm"
               @click="openCadastrarPrazoModal(ind, tipo.nome)"
             />
           </div>
@@ -116,95 +139,67 @@
       v-model:visible="novoPrazoModalVisible"
       header="Cadastrar Novo Prazo"
       :modal="true"
-      class="dialog-box"
+      :style="{ width: '450px' }"
+      :draggable="false"
+      class="p-fluid"
     >
-      <div class="p-fluid grid gap-2">
-        <div class="field grid gap-2">
-          <label for="tipoPrazo">Tipo de Prazo</label>
-          <p style="font-weight: bold; color: #1e6462">{{ novoPrazo.tipoDesc }}</p>
+      <div class="grid gap-4">
+        <div class="col-12">
+          <label class="block text-sm font-medium text-[#114658]">Tipo de Prazo</label>
+          <p class="font-bold text-[#1E6462]">{{ novoPrazo.tipoDesc }}</p>
         </div>
-        <div class="field grid gap-2">
-          <label for="dataEntrega">Data e Hora de Entrega</label>
+        <div class="col-12">
+          <label for="dataEntrega" class="block text-sm font-medium text-[#114658]">Data e Hora de Entrega</label>
           <Calendar
             id="dataEntrega"
             v-model="novoPrazo.dataEntrega"
             dateFormat="dd/mm/yy"
             :showTime="true"
             :showSeconds="true"
+            class="w-full"
           />
         </div>
-        <div class="field grid gap-2">
-          <label for="dataRetorno">Data e Hora de Retorno</label>
+        <div class="col-12">
+          <label for="dataRetorno" class="block text-sm font-medium text-[#114658]">Data e Hora de Retorno</label>
           <Calendar
             id="dataRetorno"
             v-model="novoPrazo.dataRetorno"
             dateFormat="dd/mm/yy"
             :showTime="true"
             :showSeconds="true"
+            class="w-full"
           />
         </div>
       </div>
       <template #footer>
-        <Button label="Cancelar" class="cancel-btn" @click="novoPrazoModalVisible = false" />
-        <Button label="Salvar" class="save-btn" @click="salvarNovoPrazo" autofocus />
+        <Button label="Cancelar" icon="pi pi-times" @click="novoPrazoModalVisible = false" class="p-button-text" />
+        <Button label="Salvar" icon="pi pi-check" @click="salvarNovoPrazo" autofocus />
       </template>
     </Dialog>
 
-    <!-- Modal de confirmação para excluir cronograma -->
-    <Dialog
-      v-model:visible="confirmDeleteModalVisible"
-      header="Confirmar Exclusão"
-      :modal="true"
-      class="dialog-box"
-    >
-      <p>Tem certeza que deseja excluir este cronograma?</p>
-      <template #footer>
-        <Button label="Cancelar" class="cancel-btn" @click="confirmDeleteModalVisible = false" />
-        <Button label="Excluir" class="delete-btn" @click="deleteCronograma" autofocus />
-      </template>
-    </Dialog>
-
-    <!-- Modal de confirmação para excluir prazo -->
-    <Dialog
-      v-model:visible="confirmDeletePrazoModalVisible"
-      header="Confirmar Exclusão de Prazo"
-      :modal="true"
-      class="dialog-box"
-    >
-      <p>Tem certeza que deseja excluir este prazo?</p>
-      <template #footer>
-        <Button
-          label="Cancelar"
-          class="cancel-btn"
-          @click="confirmDeletePrazoModalVisible = false"
-        />
-        <Button label="Excluir" class="delete-btn" @click="deletePrazo" autofocus />
-      </template>
-    </Dialog>
-  </div>
+    <ConfirmDialog :draggable="false" />
+  </AppBody>
 </template>
-  
-  <script setup>
-import { ref, reactive } from 'vue'
+
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import { useConfirm } from "primevue/useconfirm"
+import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Calendar from 'primevue/calendar'
-import Dropdown from 'primevue/dropdown'
+import ConfirmDialog from 'primevue/confirmdialog'
 import endpoints from '@/Controllers/Endpoints.controller'
 
-const cronogramas = ref([])
-setTimeout(async () => {
-  cronogramas.value = await endpoints.getCronogramas()
-}, 100)
+const confirm = useConfirm()
 
+const cronogramas = ref([])
 const novoCronogramaModalVisible = ref(false)
 const prazosModalVisible = ref(false)
 const novoPrazoModalVisible = ref(false)
-const confirmDeleteModalVisible = ref(false)
-const confirmDeletePrazoModalVisible = ref(false)
 
 const novoCronograma = reactive({
   descricao: '',
@@ -221,7 +216,7 @@ const tiposPrazos = ref({
     horarios: false
   },
   ReelaboracaoProposta: {
-    nome: 'Reelaboracao da Proposta',
+    nome: 'Reelaboração da Proposta',
     horarios: false
   },
   EntregaTC: {
@@ -229,7 +224,7 @@ const tiposPrazos = ref({
     horarios: false
   },
   ReelaboracaoTC: {
-    nome: 'Reelaboracao de TC',
+    nome: 'Reelaboração de TC',
     horarios: false
   }
 })
@@ -241,7 +236,9 @@ const novoPrazo = reactive({
   dataRetorno: null
 })
 
-const prazoParaExcluir = ref(null)
+onMounted(async () => {
+  cronogramas.value = await endpoints.getCronogramas()
+})
 
 const formatDateTime = (date) => {
   return new Date(date).toLocaleString('pt-BR', {
@@ -285,7 +282,7 @@ const openPrazosModal = async (cronograma) => {
       horarios: false
     },
     ReelaboracaoProposta: {
-      nome: 'Reelaboracao da Proposta',
+      nome: 'Reelaboração da Proposta',
       horarios: false
     },
     EntregaTC: {
@@ -293,7 +290,7 @@ const openPrazosModal = async (cronograma) => {
       horarios: false
     },
     ReelaboracaoTC: {
-      nome: 'Reelaboracao deTC',
+      nome: 'Reelaboração de TC',
       horarios: false
     }
   }
@@ -336,31 +333,33 @@ const salvarNovoPrazo = async () => {
 }
 
 const confirmDeleteCronograma = (cronograma) => {
-  cronogramaSelecionado.value = cronograma
-  confirmDeleteModalVisible.value = true
+  confirm.require({
+    message: 'Tem certeza que deseja excluir este cronograma?',
+    header: 'Confirmação',
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: () => deleteCronograma(cronograma.id_cronograma),
+  })
 }
 
-const deleteCronograma = async () => {
-  await endpoints.deleteCronograma(cronogramaSelecionado.value.id_cronograma)
+const deleteCronograma = async (id_cronograma) => {
+  await endpoints.deleteCronograma(id_cronograma)
   cronogramas.value = await endpoints.getCronogramas()
-
-  confirmDeleteModalVisible.value = false
-  cronogramaSelecionado.value = null
 }
 
-const confirmDeletePrazo = async (prazo) => {
-  prazoParaExcluir.value = prazo
-
-  confirmDeletePrazoModalVisible.value = true
+const confirmDeletePrazo = (prazo) => {
+  confirm.require({
+    message: 'Tem certeza que deseja excluir este prazo?',
+    header: 'Confirmação',
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: () => deletePrazo(prazo.id_prazo),
+  })
 }
 
-const deletePrazo = async () => {
-  if (prazoParaExcluir.value) {
-    await endpoints.deletePrazo(prazoParaExcluir.value.id_prazo)
-    await atualizarPrazos()
-    confirmDeletePrazoModalVisible.value = false
-    prazoParaExcluir.value = null
-  }
+const deletePrazo = async (id_prazo) => {
+  await endpoints.deletePrazo(id_prazo)
+  await atualizarPrazos()
 }
 
 const atualizarPrazos = async () => {
@@ -378,80 +377,63 @@ const atualizarPrazos = async () => {
   prazosModalVisible.value = true
 }
 </script>
-  
-  <style>
-.p-button,
-.p-button:not(:disabled):hover {
-  border: none !important;
-}
-div.dialog-box {
-  width: 400px;
-}
-</style>
-  
-  <style scoped>
-.page-title {
-  color: #114658;
-  font-size: 2rem;
-  font-weight: bold;
-}
 
-.create-btn {
-  background-color: #2a816c;
+<style scoped>
+:deep(.p-button).p-button-text  {
+  background-color: #ffffff;
+}
+:deep(.p-button):hover {
   border: none;
-  color: white;
-  width: 33%;
-  min-width: 11rem;
+}
+:deep(.p-button) {
+  background-color: #2A816C;
+  border: none;
 }
 
-.view-deadlines-btn {
-  background-color: #1e6462;
-  color: white;
+:deep(.p-button:enabled:hover) {
+  background-color: #1E6462;
 }
 
-.delete-btn {
-  background-color: #dc3545;
-  color: white;
-}
-
-.card {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-    0 1px 3px 0 rgba(0, 0, 0, 0.12);
-}
-
-.dialog-box {
-  background-color: #cbe4de;
-  border-radius: 10px;
-}
-
-.section-title {
-  color: #2a816c;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.subsection-title {
-  color: #1e6462;
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-
-.add-deadline-btn {
-  background-color: #2a816c;
-  color: white;
-}
-
-.cancel-btn {
-  background-color: transparent;
+:deep(.p-button.p-button-text) {
   color: #114658;
 }
 
-.save-btn {
-  background-color: #2a816c;
+:deep(.p-button.p-button-text:enabled:hover) {
+  background: rgba(17, 70, 88, 0.04);
+  color: #114658;
+}
+
+:deep(.p-datatable .p-datatable-thead > tr > th) {
+  background-color: #f8f9fa;
+  color: #114658;
+  font-weight: 600;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr) {
+  background-color: #ffffff;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr:hover) {
+  background-color: #e9ecef;
+}
+
+:deep(.p-dialog .p-dialog-header) {
+  background-color: #2A816C;
   color: white;
+}
+
+:deep(.p-dialog .p-dialog-content) {
+  background-color: #ffffff;
+  padding: 2rem;
+}
+
+:deep(.p-dialog .p-dialog-footer) {
+  background-color: #f8f9fa;
+  padding: 1rem;
+}
+
+:deep(.p-calendar .p-inputtext) {
+  width: 100%;
 }
 </style>

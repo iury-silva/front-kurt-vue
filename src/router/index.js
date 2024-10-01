@@ -15,11 +15,6 @@ const router = createRouter({
       component: Default,
       children: [
         {
-          path: '/dashboard',
-          name: 'Dashboard',
-          component: () => import('../views/Dashboard.vue')
-        },
-        {
           path: '/perfil',
           name: 'Perfil',
           component: () => import('../views/Perfil.vue')
@@ -39,11 +34,13 @@ const router = createRouter({
         {
           path: 'professor',
           name: 'CadastroProfessor',
+          meta: { customName: "Cadastro de Professor" },
           component: () => import('../views/Gestao/Professores/Professor.vue')
         },
         {
           path: 'aluno',
           name: 'CadastroAluno',
+          meta: { customName: "Cadastro de Aluno" },
           component: () => import('../views/Gestao/Alunos/Aluno.vue')
         }
       ]
@@ -56,16 +53,19 @@ const router = createRouter({
         {
           path: 'novaBanca',
           name: 'NovaBanca',
+          meta: { customName: "Nova Banca" },
           component: () => import('../views/Gestao/Bancas/NovaBanca.vue')
         },
         {
           path: '',
           name: 'Bancas',
+          meta: { customName: "Minhas Bancas" },
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
         },
         {
           path: 'minhasBancas',
           name: 'MinhasBancas',
+          meta: { customName: "Minhas Bancas" },
           component: () => import('../views/Atividades/MinhasBancas/MinhasBancas.vue'),
         },
         {
@@ -73,8 +73,28 @@ const router = createRouter({
           name: 'AvaliarEntregas',
           props: true,
           params: true,
+          meta: { customName: "Avaliar Entregas" },
           component: () => import('../views/Atividades/MinhasBancas/AvaliarEntregas.vue')
         }
+      ]
+    },
+    {
+      path: "/reunioes",
+      name: 'MinhasReunioes',
+      component: Default,
+      children: [
+        {
+          path: '',
+          name: 'MinhasReunioes',
+          meta: { customName: "Minhas Reuniões" },
+          component: () => import('../views/Atividades/MinhasReunioes.vue')
+        },
+        {
+          path: 'novaReuniao',
+          name: 'NovaReuniao',
+          meta: { customName: "Nova Reunião" },
+          component: () => import('../views/Atividades/NovaReuniao.vue')
+        },
       ]
     },
     {
@@ -127,11 +147,13 @@ const router = createRouter({
         {
           path: 'novaOrientacao',
           name: 'NovaOrientacao',
+          meta: { customName: "Nova Orientação" },
           component: () => import('../views/Gestao/Orientacoes/NovaOrientacao.vue')
         },
         {
           path: '',
           name: 'Orientacoes',
+          meta: { customName: "Orientações" },
           component: () => import('../views/Gestao/Orientacoes/Orientacoes.vue')
         }
       ]

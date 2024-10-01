@@ -1,61 +1,61 @@
 <template>
-    <div class="surface-card p-8 shadow-2 border-round">
-      <h1 class="title">Cadastro de Aluno</h1>
-      <p class="description">
-        Complete os campos a seguir para realizar o cadastro de um novo aluno no sistema. É
-        importante que todas as informações sejam inseridas de forma precisa, garantindo assim um
-        registro eficaz e organizado para futuras consultas e acompanhamentos.
-      </p>
-
-      <form @submit.prevent="submitForm">
-        <div class="grid grid-cols-2 gap-4">
-          <div class="col-12 md:col-6 mb-4">
-            <span class="p-float-label">
-              <label for="nome">Nome</label>
-              <InputText id="nome" v-model="aluno.nome" required class="w-full" />
-            </span>
-          </div>
-          <div class="col-12 md:col-6 mb-4">
-            <span class="p-float-label">
-              <label for="email">Email</label>
-              <InputText id="email" v-model="aluno.email" required class="w-full" type="email" />
-            </span>
-          </div>
-          <div class="col-12 md:col-6 mb-4">
-            <span class="p-float-label">
-              <label for="matricula">Matrícula</label>
-              <InputText
-                id="matricula"
-                v-model="aluno.matricula"
-                required
-                class="w-full"
-                type="number"
-              />
-            </span>
-          </div>
-          <div class="col-12 md:col-6 mb-4">
-            <span class="p-float-label">
-              <label for="curso">Curso</label>
-
-              <Dropdown
-                id="curso"
-                v-model="aluno.curso"
-                :options="cursos"
-                optionLabel="nome"
-                placeholder="Selecione um curso"
-                class="w-full"
-              />
-            </span>
-          </div>
+  <AppBody>
+    <template #page-description>
+      Preencha as informações necessárias nos campos abaixo para registrar um novo professor no
+      sistema. Certifique-se de fornecer todos os dados corretamente para garantir o sucesso do
+      cadastro e o bom funcionamento do sistema.
+    </template>
+    <form @submit.prevent="submitForm">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-12 md:col-6 mb-4">
+          <span class="p-float-label">
+            <label for="nome">Nome</label>
+            <InputText id="nome" v-model="aluno.nome" required class="w-full" />
+          </span>
         </div>
-        <div class="button-container">
-          <Button type="submit" label="Cadastrar" class="submit-button" />
+        <div class="col-12 md:col-6 mb-4">
+          <span class="p-float-label">
+            <label for="email">Email</label>
+            <InputText id="email" v-model="aluno.email" required class="w-full" type="email" />
+          </span>
         </div>
-      </form>
-    </div>
+        <div class="col-12 md:col-6 mb-4">
+          <span class="p-float-label">
+            <label for="matricula">Matrícula</label>
+            <InputText
+              id="matricula"
+              v-model="aluno.matricula"
+              required
+              class="w-full"
+              type="number"
+              min="0"
+            />
+          </span>
+        </div>
+        <div class="col-12 md:col-6 mb-4">
+          <span class="p-float-label">
+            <label for="curso">Curso</label>
+
+            <Dropdown
+              id="curso"
+              v-model="aluno.curso"
+              :options="cursos"
+              optionLabel="nome"
+              placeholder="Selecione um curso"
+              class="w-full"
+            />
+          </span>
+        </div>
+      </div>
+      <div class="button-container">
+        <Button type="submit" label="Cadastrar" class="submit-button" />
+      </div>
+    </form>
+  </AppBody>
 </template>
   
-  <script setup>
+<script setup>
+import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import { ref } from 'vue'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
