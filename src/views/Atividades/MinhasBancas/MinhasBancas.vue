@@ -27,9 +27,6 @@
         </template>
       </Column>
 
-      <!-- <Column field="Orientacao.Professor.usuario.nome" header="Orientador" class="text-left">
-      </Column> -->
-
       <Column header="Avaliadores" class="text-left">
         <template #body="slotProps">
           {{ slotProps.data.Professor1.usuario.nome}} / {{ slotProps.data.Professor2.usuario.nome}}
