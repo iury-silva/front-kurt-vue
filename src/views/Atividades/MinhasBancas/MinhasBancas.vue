@@ -1,11 +1,13 @@
 <template>
   <AppBody>
     <template #page-description>
-      <p>
-        Nesta página você pode visualizar todas as bancas cadastradas no sistema.
-      </p>
+      <p>Nesta página você pode visualizar todas as bancas cadastradas no sistema.</p>
     </template>
+    <div v-if="bancas.length == 0" class="noBancas">
+      <span>Você não participa de nenhuma banca!</span>
+    </div>
     <DataTable
+      v-else
       :value="bancas"
       responsiveLayout="scroll"
       class="w-full"
@@ -29,10 +31,10 @@
 
       <Column header="Avaliadores" class="text-left">
         <template #body="slotProps">
-          {{ slotProps.data.Professor1.usuario.nome}} / {{ slotProps.data.Professor2.usuario.nome}}
+          {{ slotProps.data.Professor1.usuario.nome }} /
+          {{ slotProps.data.Professor2.usuario.nome }}
         </template>
       </Column>
-
 
       <Column header="" class="text-left">
         <template #body="slotProps">
@@ -40,7 +42,9 @@
             icon="pi pi-file-edit"
             v-tooltip.bottom="'Avaliar Entrega'"
             class="p-button-rounded p-button-sm p-button-text"
-            @click="router.push({ name: 'AvaliarEntregas', params: { id: slotProps.data.id_banca } })"
+            @click="
+              router.push({ name: 'AvaliarEntregas', params: { id: slotProps.data.id_banca } })
+            "
           />
         </template>
       </Column>

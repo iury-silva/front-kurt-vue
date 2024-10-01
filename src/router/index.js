@@ -59,7 +59,7 @@ const router = createRouter({
         {
           path: '',
           name: 'Bancas',
-          meta: { customName: "Minhas Bancas" },
+          meta: { customName: "Todas as Bancas" },
           component: () => import('../views/Gestao/Bancas/Bancas.vue')
         },
         {
@@ -80,7 +80,7 @@ const router = createRouter({
     },
     {
       path: "/reunioes",
-      name: 'MinhasReunioes',
+      name: '',
       component: Default,
       children: [
         {

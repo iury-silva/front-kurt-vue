@@ -26,7 +26,7 @@
       <Column field="status" header="Status TCC" class="text-left">
         <template #body="slotProps">
           <Tag :severity="getSeverity(slotProps.data.status)" rounded>
-            {{ slotProps.data.status }}
+            {{ formatedStatus(slotProps.data.status) }}
           </Tag>
         </template>
       </Column>
@@ -95,6 +95,13 @@ const getSeverity = (status) => {
 
 const orientacaoStore = useOrientacaoStore()
 const orientacoes = computed(() => orientacaoStore.orientacoes)
+
+const formatedStatus = (status) =>{
+  if(status == 'Concluido'){
+    return 'Concluído';
+  }
+  return status.replace(/([A-Z])/g, ' $1')
+}
 
 onMounted(() => {
   orientacaoStore.getOrientacoesAction()
