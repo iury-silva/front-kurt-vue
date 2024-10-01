@@ -98,9 +98,9 @@ const menuItems = computed(() => {
     items.push({
       label: 'Minhas Atividades',
       items: [
-        { label: 'Avaliações', icon: 'pi pi-check-square', link: 'Avaliacoes' },
+        { label: 'Avaliações', icon: 'pi pi-list-check', link: 'Avaliacoes' },
         { label: 'Minhas bancas', icon: 'pi pi-check-square', link: 'MinhasBancas' },
-        { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times', link: 'MinhasReunioes' }
+        { label: 'Minhas Reuniões', icon: 'pi pi-calendar-clock', link: 'MinhasReunioes' }
       ]
     })
   }
@@ -110,7 +110,7 @@ const menuItems = computed(() => {
       label: 'Gestão',
       items: [
         { label: 'Cronogramas ', icon: 'pi pi-calendar', link: 'Cronogramas' },
-        { label: 'Orientações ', icon: 'pi pi-calendar', link: 'Orientacoes' },
+        { label: 'Orientações ', icon: 'pi pi-sitemap', link: 'Orientacoes' },
         { label: 'Bancas', icon: 'pi pi-users', link: 'Bancas' },
         { label: 'Cadastro de aluno', icon: 'pi pi-user-plus', link: 'CadastroAluno' },
         { label: 'Cadastro de professor', icon: 'pi pi-user-plus', link: 'CadastroProfessor' }
@@ -120,8 +120,8 @@ const menuItems = computed(() => {
 
     if (user.value.nivel_acesso === 'aluno') {
         items.push(
-            { label: 'Minhas entregas', icon: 'pi pi-file', link: 'MinhasEntregas' },
-            { label: 'Minhas Reuniões', icon: 'pi pi-calendar-times', link: 'MinhasReunioes' }
+            { label: 'Minhas entregas', icon: 'pi pi-file-export', link: 'MinhasEntregas' },
+            { label: 'Minhas Reuniões', icon: 'pi pi-calendar-clock', link: 'MinhasReunioes' }
         )
     }
 
