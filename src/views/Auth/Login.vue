@@ -5,26 +5,26 @@
         <h1 class="mb-6 text-3xl font-semibold text-start text-brand-300">Login</h1>
         <form @submit.prevent="login" class="space-y-4">
           <div>
-            <label for="email" class="block mb-2 text-sm font-medium text-brand-300">Email</label>
+            <label for="email" class="block mb-2 text-sm font-medium text-brand-300">E-mail</label>
             <InputText
               id="email"
               v-model="email"
               type="email"
               class="w-full p-inputtext"
-              placeholder="Enter your email"
+              placeholder="Complete seu e-mail"
               required
             />
           </div>
           <div>
             <label for="password" class="block mb-2 text-sm font-medium text-brand-300"
-              >Password</label
+              >Senha</label
             >
             <Password
               id="password"
               v-model="password"
               type="password"
               class="w-full"
-              placeholder="Enter your password"
+              placeholder="Complete sua senha"
               required
               toggleMask
               :feedback="false"
@@ -34,34 +34,34 @@
         </form>
         <div class="mt-4 text-center">
           <a href="#" @click.prevent="showForgotPasswordModal = true" class="text-sm text-brand-300"
-            >Forgot Password?</a
+            >Esqueceu a senha?</a
           >
         </div>
       </div>
     </div>
     <Dialog
       v-model:visible="showForgotPasswordModal"
-      header="Recover Password"
+      header="Recupere sua senha"
       modal
       :draggable="false"
     >
       <form @submit.prevent="recoverPassword" class="flex flex-col gap-3">
         <div class="form-group">
           <label for="recover-email" class="block mb-2 text-sm font-medium text-brand-300"
-            >Email</label
+            >E-mail</label
           >
           <InputText
             id="recover-email"
             v-model="recoverEmail"
             type="email"
             class="w-full p-inputtext"
-            placeholder="Enter your email"
+            placeholder="Complete seu e-mail"
             required
           />
         </div>
-        <Button label="Recover Password" type="submit" class="w-full" />
+        <Button label="Recuperar senha" type="submit" class="w-full" />
         <Button
-          label="Cancel"
+          label="Cancelar"
           type="button"
           class="w-full"
           outlined

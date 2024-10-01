@@ -37,7 +37,7 @@ const endpoints = {
         return await api.post('/auth/recover', dados)
             .then((response) => {
                 if (response.data) {
-                    util.setNotification('success', 'Password recovery email sent successfully!');
+                    util.setNotification('success', 'Senha recuperada com sucesso!');
                     return true;
                 }
             })
