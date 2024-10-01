@@ -26,7 +26,24 @@
             {{ formatDate(slotProps.data.data_envio) || 'Pendente' }}
           </template>
         </Column>
-        <Column field="status" header="Status" class="text-left"></Column>
+        <Column field="status" header="Status" class="text-left">
+          <template #body="slotProps">
+            <Tag :severity="getSeverity(slotProps.data.status)" rounded>
+              {{ formatedStatus(slotProps.data.status) }}
+            </Tag>
+          </template>
+        </Column>
+        <Column header="Arquivo" class="text-center">
+          <template #body="slotProps">
+            <Button
+              v-if="slotProps.data.arquivo"
+              label="Download"
+              icon="pi pi-download"
+              class="p-button-sm p-button-outlined"
+              @click="downloadFile(slotProps.data)"
+            />
+          </template>
+        </Column>
         <Column header="Avaliação" class="text-center">
           <template #body="slotProps">
             <Button
@@ -90,7 +107,11 @@ import Dialog from 'primevue/dialog'
 import Textarea from 'primevue/textarea'
 import InputNumber from 'primevue/inputnumber'
 import { useOrientacaoStore } from '@/stores/orientacao.store'
+import { useEntregaStore } from '@/stores/entregas.store'
+import util from '@/Controllers/Util.controller'
+import Tag from 'primevue/tag'
 
+const entregasStore = useEntregaStore()
 const route = useRoute()
 const router = useRouter()
 const orientacaoStore = useOrientacaoStore()
@@ -196,6 +217,38 @@ const submitAvaliacao = async () => {
   } catch (error) {
     console.error('Erro ao enviar avaliação:', error)
   }
+}
+
+const downloadFile = async (entrega) => {
+  try {
+    if (entrega.arquivo) {
+      const fileName = `${getPrazoTipoLabel(entrega.prazo_tipo)}-${
+        orientacao.value.orientacao.titulo_trabalho
+      }.pdf`
+      await entregasStore.downloadFile(entrega.arquivo, fileName)
+    } else {
+      util.setNotification('error', 'Sem arquivo disponível para download!')
+    }
+  } catch (error) {
+    util.setNotification('error', 'Erro ao baixar arquivo!')
+  }
+}
+
+const getSeverity = (status) => {
+  switch (status) {
+    case 'Pendente':
+      return 'warn'
+    case 'AguardandoAvaliacao':
+      return 'info'
+    case 'Avaliado':
+      return 'success'
+  }
+}
+const formatedStatus = (status) =>{
+  if(status == 'AguardandoAvaliacao'){
+    return 'Aguardando Avaliação';
+  }
+  return status.replace(/([A-Z])/g, ' $1')
 }
 </script>
   

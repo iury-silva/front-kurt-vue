@@ -26,7 +26,7 @@
       <Column field="orientacao.status" header="Status" class="text-left">
         <template #body="slotProps">
           <Tag :severity="getSeverity(slotProps.data.orientacao.status)" rounded>
-            {{ slotProps.data.orientacao.status }}
+            {{ formatedStatus(slotProps.data.orientacao.status) }}
           </Tag>
         </template>
       </Column>
@@ -92,6 +92,12 @@ const getSeverity = (status) => {
 
 const irParaPrazosEAvaliacoes = (idOrientacao) => {
   router.push({ name: 'PrazosEAvaliacoes', query: { id: idOrientacao } })
+}
+const formatedStatus = (status) =>{
+  if(status == 'Concluido'){
+    return 'Concluído';
+  }
+  return status.replace(/([A-Z])/g, ' $1')
 }
 </script>
   
