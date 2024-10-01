@@ -82,6 +82,7 @@
       :closeOnEscape="true"
       @hide="closeUploadModal"
       :style="{ width: '450px' }"
+      v-model:visible="uploadModalVisible"
     >
       <div
         class="upload-container border-2 border-dashed border-[#2A816C] p-4 text-center cursor-pointer rounded-lg"
