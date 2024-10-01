@@ -167,9 +167,8 @@ router.beforeEach((to, from, next) => {
   if (to.name !== 'Home' && !token) {
     next({ name: 'Home' })
   } else if (to.name === 'Home' && token) {
-    next({ name: 'Dashboard' })
     const session = localStorage.getItem('session')
-    if(JSON.parse(session).user.nivel_acesso == 'aluno'){
+    if(JSON.parse(session).nivel_acesso == 'aluno'){
         next({ name: 'MinhasEntregas' });
     } else {
         next({ name: 'Avaliacoes' });
