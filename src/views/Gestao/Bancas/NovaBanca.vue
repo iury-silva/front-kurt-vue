@@ -201,14 +201,14 @@
           <div
             class="rounded-full bg-brand-100 text-white inline-flex justify-center items-center h-24 w-24 -mt-20 border-4 border-white"
           >
-          <i class="pi pi-question !text-4xl"></i>
-        </div>
+            <i class="pi pi-question !text-4xl"></i>
+          </div>
           <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
           <p class="mb-0">{{ message.message }}</p>
           <div class="flex flex-col gap-2 mt-6">
             <div class="flex gap-2">
               <span class="font-semibold">Titulo do Trabalho:</span>
-              <span >{{ selectedOrientacao.titulo_trabalho }}</span>
+              <span>{{ selectedOrientacao.titulo_trabalho }}</span>
             </div>
             <div class="flex gap-2">
               <span class="font-semibold">Aluno:</span>
@@ -255,6 +255,7 @@ import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
 import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
+import confetti from 'canvas-confetti'
 
 const confirm = useConfirm()
 
@@ -308,6 +309,11 @@ const finish = () => {
     idcronograma: selectedOrientacao.value.idcronograma,
     idprofessor1: selectedProfessor1.value.id_professor,
     idprofessor2: selectedProfessor2.value.id_professor
+  })
+  confetti({
+    particleCount: 200,
+    spread: 130,
+    origin: { y: 0.6 }
   })
 }
 </script>
