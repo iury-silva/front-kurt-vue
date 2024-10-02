@@ -11,7 +11,7 @@
               v-model="email"
               type="email"
               class="w-full p-inputtext"
-              placeholder="Complete seu e-mail"
+              placeholder="Digite seu e-mail"
               required
             />
           </div>
@@ -24,7 +24,7 @@
               v-model="password"
               type="password"
               class="w-full"
-              placeholder="Complete sua senha"
+              placeholder="********"
               required
               toggleMask
               :feedback="false"
@@ -54,8 +54,9 @@
             id="recover-email"
             v-model="recoverEmail"
             type="email"
+            placeholder="Digite seu e-mail"
             class="w-full p-inputtext"
-            placeholder="Complete seu e-mail"
+            place
             required
           />
         </div>
