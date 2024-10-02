@@ -16,13 +16,31 @@
     </div>
     <DataTable
       v-else
-      :value="bancas"
+      :value="filteredBancas"
       responsiveLayout="scroll"
       class="w-full"
       paginator
       :rows="5"
       :rowsPerPageOptions="[5, 10, 20, 50]"
     >
+
+    <template #header>
+      <div class="flex justify-end">
+        <IconField>
+          <InputIcon>
+            <i class="pi pi-search" />
+          </InputIcon>
+          <InputText v-model="globalFilter" placeholder="Pesquisar" class="w-full" />
+        </IconField>
+      </div>
+    </template>
+
+    <template #empty>
+      <div class="text-center">
+        <span>Nenhuma banca encontrada.</span>
+      </div>
+    </template>
+
       <Column
         field="Orientacao.titulo_trabalho"
         header="Título do Trabalho"
@@ -62,7 +80,7 @@
 import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import { useBancaStore } from '@/stores/banca.store'
 import { format } from 'date-fns'
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -70,6 +88,9 @@ import Button from 'primevue/button'
 import router from '@/router'
 import Tag from 'primevue/tag'
 import ConfirmDialog from 'primevue/confirmdialog'
+import InputText from 'primevue/inputtext'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 
 const confirm = useConfirm()
 
@@ -103,8 +124,21 @@ const getSeverity = (status) => {
   }
 }
 
+const globalFilter = ref('')
+
 const bancaStore = useBancaStore()
-const bancas = bancaStore.getBanca
+const bancas = computed(() => bancaStore.bancas)
+
+const filteredBancas = computed(() => {
+  return bancas.value.filter((banca) => {
+    return (
+      banca.Orientacao.titulo_trabalho.toLowerCase().includes(globalFilter.value.toLowerCase()) ||
+      banca.Orientacao.status.toLowerCase().includes(globalFilter.value.toLowerCase())
+    )
+  })
+})
+
+
 onMounted(() => {
   bancaStore.getBancas()
 })
