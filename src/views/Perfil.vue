@@ -192,7 +192,13 @@ onMounted(() => {
 
 const updateProfile = async () => {
   try {
-    await endpoints.atualizarPerfil(profile.value)
+    let profileData = {
+      nome: profile.value.nome,
+      //dados.split("base64,")[1]
+      avatar: profile.value.avatar.split('base64,')[1]
+    }
+
+    await endpoints.atualizarPerfil(profileData)
     console.log('Profile updated successfully')
   } catch (error) {
     console.error('Error updating profile:', error)
