@@ -254,28 +254,6 @@ const getSeverity = (status) => {
 </style>
 
 <style scoped>
-.p-button {
-  background-color: #2a816c;
-  border: none;
-  color: white;
-}
-
-.p-button:hover {
-  background-color: #1e6462;
-}
-
-.p-button-outlined {
-  color: #2a816c;
-  border-color: #2a816c;
-  background-color: transparent;
-}
-
-.p-button-outlined:hover {
-  background-color: #e6f7f5;
-  color: #1e6462;
-  border-color: #1e6462;
-}
-
 :deep(.p-datatable) {
   font-family: Arial, sans-serif;
 }

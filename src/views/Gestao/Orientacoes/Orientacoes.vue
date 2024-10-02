@@ -14,13 +14,29 @@
       />
     </template>
     <DataTable
-      :value="orientacoes"
+      :value="filteredOrientacoes"
       responsiveLayout="scroll"
       class="w-full"
       paginator
       :rows="5"
       :rowsPerPageOptions="[5, 10, 20, 50]"
     >
+    <template #header>
+      <div class="flex justify-end">
+        <IconField>
+          <InputIcon>
+            <i class="pi pi-search" />
+          </InputIcon>
+          <InputText v-model="globalFilter" placeholder="Pesquisar" class="w-full" />
+        </IconField>
+      </div>
+    </template>
+
+    <template #empty>
+      <div class="text-center">
+        <span>Nenhuma orientação encontrada.</span>
+      </div>
+    </template>
       <Column field="titulo_trabalho" header="Título do Trabalho" class="text-left"></Column>
 
       <Column field="status" header="Status TCC" class="text-left">
@@ -52,7 +68,7 @@
 <script setup>
 import AppBody from '@/Layouts/BasePage/AppBody.vue'
 import { useOrientacaoStore } from '@/stores/orientacoes.store'
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -60,8 +76,24 @@ import Button from 'primevue/button'
 import router from '@/router'
 import Tag from 'primevue/tag'
 import ConfirmDialog from 'primevue/confirmdialog'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
+import InputText from 'primevue/inputtext'
+
 
 const confirm = useConfirm()
+const globalFilter = ref('')
+
+const filteredOrientacoes = computed(() => {
+  return orientacoes.value.filter((orientacao) => {
+    return (
+      orientacao.titulo_trabalho.toLowerCase().includes(globalFilter.value.toLowerCase()) ||
+      orientacao.status.toLowerCase().includes(globalFilter.value.toLowerCase()) ||
+      orientacao.Aluno.usuario.nome.toLowerCase().includes(globalFilter.value.toLowerCase()) ||
+      orientacao.Professor.usuario.nome.toLowerCase().includes(globalFilter.value.toLowerCase())
+    )
+  })
+})
 
 const confirmDialog = (id_orientacao) => {
   confirm.require({

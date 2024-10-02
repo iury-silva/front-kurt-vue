@@ -59,9 +59,5 @@ export const useMinhasBancasStore = defineStore({
             await this.getMinhasBancasByIdAction(id);
 
         },
-
-        downloadFileAction(file) {
-
-        }
     },
 });
